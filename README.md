@@ -47,7 +47,7 @@ This project aims to create a custom video input solution for the classic Macint
 - Got a first untested draft of the Verilog for the FPGA -- untested but compiled
     Spent an hour trying to mount the FPGA as a drive to drop the compiled .JED to it
     Turns out I need a dumb USB-A to USB-C cable and that works.  Actual USB-C doesn't
-TODO: Pick up from there and test the verilog code. 
+- TODO: Pick up from there and test the verilog code. 
 
 
 ## Prerequisites
