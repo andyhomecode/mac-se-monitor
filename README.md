@@ -17,6 +17,7 @@ This project aims to create a custom video input solution for the classic Macint
 - Microcontroller: Arduino
 - Clock Generator: SI5351 PLL
 - FPGA: Lattice STEP-MXO2-LPC
+- Developed online https://stepfpga.eimtechnology.com/project/3143/
 - Input Interfaces: VGA/USB-C to VGA adapter
 
 ## Technical Specifications
