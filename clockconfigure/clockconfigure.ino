@@ -1,24 +1,24 @@
 #include <Adafruit_SI5351.h>
-
-# Andy Maxwell
-# 2025 04 08 
-# To drive the Mac SE monitor, I need a clock generator
-# the FPGA I have apparently has a PLL in it, but I can't 
-# figure out how to use it, so instead I'm going hardware
-# and using an Adafruit SI5351 breakout module to generate the frequency
-# and an Adafruit Feather Huzzah! arduino module to send it SPI settings
-# (way overkill, I know, but that's what I have on hand)
-#
-# The code was vibe-coded using Claude Sonnet 3.7 and it suuuuucked
-# I finally found some good sample code online, fed it into it to update the
-# frequency alone and that worked.
-#
-#
-# Wiring is very straight-forward:
-# SI5351A VCC → Feather 3V
-# SI5351A GND → Feather GND
-# SI5351A SDA → Feather GPIO4 (SDA)
-# SI5351A SCL → Feather GPIO5 (SCL)
+//
+//# Andy Maxwell
+//# 2025 04 08 
+//# To drive the Mac SE monitor, I need a clock generator
+//# the FPGA I have apparently has a PLL in it, but I can't 
+//# figure out how to use it, so instead I'm going hardware
+//# and using an Adafruit SI5351 breakout module to generate the frequency
+//# and an Adafruit Feather Huzzah! arduino module to send it SPI settings
+//# (way overkill, I know, but that's what I have on hand)
+//#
+//# The code was vibe-coded using Claude Sonnet 3.7 and it suuuuucked
+//# I finally found some good sample code online, fed it into it to update the
+//# frequency alone and that worked.
+//#
+//#
+//# Wiring is very straight-forward:
+//# SI5351A VCC → Feather 3V
+//# SI5351A GND → Feather GND
+//# SI5351A SDA → Feather GPIO4 (SDA)
+//# SI5351A SCL → Feather GPIO5 (SCL)
 
 Adafruit_SI5351 clockgen = Adafruit_SI5351();
 
