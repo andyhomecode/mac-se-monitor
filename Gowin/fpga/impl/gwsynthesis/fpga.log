@@ -1,0 +1,43 @@
+GowinSynthesis start
+Running parser ...
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v'
+Compiling module 'hdmi_to_mac_se_converter'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":27)
+Compiling module 'input_coordinate_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":252)
+Compiling module 'color_converter'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":284)
+Compiling module 'scaler'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":322)
+Compiling module 'mac_se_timing_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":440)
+WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":494)
+WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":498)
+Compiling module 'frame_buffer(ADDR_WIDTH=18)'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":380)
+NOTE  (EX0101) : Current top module is "hdmi_to_mac_se_converter"
+[5%] Running netlist conversion ...
+WARN  (CV0016) : Input tfp401_pclk is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":29)
+WARN  (CV0016) : Input tfp401_hs is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":30)
+WARN  (CV0016) : Input tfp401_vs is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":31)
+WARN  (CV0016) : Input tfp401_de is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":32)
+WARN  (CV0016) : Input tfp401_r is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":33)
+WARN  (CV0016) : Input tfp401_g is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":34)
+WARN  (CV0016) : Input tfp401_b is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":35)
+WARN  (CV0016) : Input test_mode_switch is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":46)
+WARN  (CV0016) : Input input_select_switches is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":47)
+Running device independent optimization ...
+[10%] Optimizing Phase 0 completed
+[15%] Optimizing Phase 1 completed
+[25%] Optimizing Phase 2 completed
+Running inference ...
+[30%] Inferring Phase 0 completed
+[40%] Inferring Phase 1 completed
+[50%] Inferring Phase 2 completed
+[55%] Inferring Phase 3 completed
+Running technical mapping ...
+[60%] Tech-Mapping Phase 0 completed
+[65%] Tech-Mapping Phase 1 completed
+[75%] Tech-Mapping Phase 2 completed
+[80%] Tech-Mapping Phase 3 completed
+[90%] Tech-Mapping Phase 4 completed
+WARN  (NL0002) : The module "color_converter" instantiated to "u_color_conv" is swept in optimizing("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":140)
+WARN  (NL0002) : The module "frame_buffer" instantiated to "u_frame_buffer" is swept in optimizing("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":227)
+WARN  (NL0002) : The module "scaler" instantiated to "u_scaler" is swept in optimizing("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":160)
+[95%] Generate netlist file "C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\impl\gwsynthesis\fpga.vg" completed
+[100%] Generate report file "C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\impl\gwsynthesis\fpga_syn.rpt.html" completed
+GowinSynthesis finish

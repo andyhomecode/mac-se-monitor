@@ -1,0 +1,52 @@
+[
+ {
+  "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+  "InstLine" : 27,
+  "InstName" : "hdmi_to_mac_se_converter",
+  "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+  "ModuleLine" : 27,
+  "ModuleName" : "hdmi_to_mac_se_converter",
+  "SubInsts" : [
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "InstLine" : 121,
+    "InstName" : "u_input_coord_gen",
+    "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "ModuleLine" : 252,
+    "ModuleName" : "input_coordinate_generator"
+   },
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "InstLine" : 134,
+    "InstName" : "u_color_conv",
+    "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "ModuleLine" : 284,
+    "ModuleName" : "color_converter"
+   },
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "InstLine" : 148,
+    "InstName" : "u_scaler",
+    "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "ModuleLine" : 322,
+    "ModuleName" : "scaler"
+   },
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "InstLine" : 163,
+    "InstName" : "u_mac_se_timing",
+    "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "ModuleLine" : 440,
+    "ModuleName" : "mac_se_timing_generator"
+   },
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "InstLine" : 211,
+    "InstName" : "u_frame_buffer",
+    "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+    "ModuleLine" : 380,
+    "ModuleName" : "frame_buffer"
+   }
+  ]
+ }
+]

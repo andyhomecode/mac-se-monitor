@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="hdmi_to_mac_se_converter" Lut="2" T_Register="21(0)" T_Lut="42(2)">
+ <SubModule name="u_mac_se_timing" Register="21" Lut="40" T_Register="21(21)" T_Lut="40(40)"/>
+</Module>
