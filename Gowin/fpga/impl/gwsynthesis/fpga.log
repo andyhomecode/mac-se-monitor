@@ -1,43 +1,33 @@
 GowinSynthesis start
 Running parser ...
-Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v'
-Compiling module 'hdmi_to_mac_se_converter'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":27)
-Compiling module 'input_coordinate_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":252)
-Compiling module 'color_converter'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":284)
-Compiling module 'scaler'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":322)
-Compiling module 'mac_se_timing_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":440)
-WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":494)
-WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":498)
-Compiling module 'frame_buffer(ADDR_WIDTH=18)'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":380)
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\color_converter.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\frame_buffer.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\hdmi_to_mac_se_converter.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\input_coordinate_generator.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\mac_se_timing_generator.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\scaler.v'
+Compiling module 'hdmi_to_mac_se_converter'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\hdmi_to_mac_se_converter.v":28)
+Compiling module 'input_coordinate_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\input_coordinate_generator.v":8)
+WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\input_coordinate_generator.v":43)
+WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\input_coordinate_generator.v":49)
+Compiling module 'color_converter'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\color_converter.v":11)
+Compiling module 'scaler'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\scaler.v":17)
+WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\scaler.v":58)
+WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\scaler.v":59)
+Compiling module 'mac_se_timing_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\mac_se_timing_generator.v":10)
+WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\mac_se_timing_generator.v":48)
+WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\mac_se_timing_generator.v":52)
+Compiling module 'frame_buffer(ADDR_WIDTH=18)'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\frame_buffer.v":9)
+Extracting RAM for identifier 'ram'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\frame_buffer.v":29)
+WARN  (EX3791) : Expression size 2 truncated to fit in target size 1("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\frame_buffer.v":39)
 NOTE  (EX0101) : Current top module is "hdmi_to_mac_se_converter"
 [5%] Running netlist conversion ...
-WARN  (CV0016) : Input tfp401_pclk is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":29)
-WARN  (CV0016) : Input tfp401_hs is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":30)
-WARN  (CV0016) : Input tfp401_vs is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":31)
-WARN  (CV0016) : Input tfp401_de is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":32)
-WARN  (CV0016) : Input tfp401_r is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":33)
-WARN  (CV0016) : Input tfp401_g is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":34)
-WARN  (CV0016) : Input tfp401_b is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":35)
-WARN  (CV0016) : Input test_mode_switch is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":46)
-WARN  (CV0016) : Input input_select_switches is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":47)
+WARN  (CV0016) : Input tfp401_vs is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\hdmi_to_mac_se_converter.v":32)
+WARN  (CV0016) : Input input_select_switches is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\hdmi_to_mac_se_converter.v":48)
 Running device independent optimization ...
 [10%] Optimizing Phase 0 completed
 [15%] Optimizing Phase 1 completed
 [25%] Optimizing Phase 2 completed
 Running inference ...
-[30%] Inferring Phase 0 completed
-[40%] Inferring Phase 1 completed
-[50%] Inferring Phase 2 completed
-[55%] Inferring Phase 3 completed
-Running technical mapping ...
-[60%] Tech-Mapping Phase 0 completed
-[65%] Tech-Mapping Phase 1 completed
-[75%] Tech-Mapping Phase 2 completed
-[80%] Tech-Mapping Phase 3 completed
-[90%] Tech-Mapping Phase 4 completed
-WARN  (NL0002) : The module "color_converter" instantiated to "u_color_conv" is swept in optimizing("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":140)
-WARN  (NL0002) : The module "frame_buffer" instantiated to "u_frame_buffer" is swept in optimizing("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":227)
-WARN  (NL0002) : The module "scaler" instantiated to "u_scaler" is swept in optimizing("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\src\main.v":160)
-[95%] Generate netlist file "C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\impl\gwsynthesis\fpga.vg" completed
-[100%] Generate report file "C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\fpga\impl\gwsynthesis\fpga_syn.rpt.html" completed
+ERROR (RP0001) : The number(164817) of DFF in the design exceeds the resource limit(16173) of current device(GW2A-LV18PG256C8/I7)
 GowinSynthesis finish

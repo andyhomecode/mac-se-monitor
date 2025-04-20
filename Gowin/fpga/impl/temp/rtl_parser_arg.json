@@ -2,7 +2,27 @@
  "Device" : "GW2A-18C",
  "Files" : [
   {
-   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/main.v",
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/color_converter.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/frame_buffer.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/hdmi_to_mac_se_converter.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/input_coordinate_generator.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/mac_se_timing_generator.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/fpga/src/scaler.v",
    "Type" : "verilog"
   }
  ],

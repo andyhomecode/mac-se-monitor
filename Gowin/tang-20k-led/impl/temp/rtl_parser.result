@@ -1,0 +1,28 @@
+[
+ {
+  "InstFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_sdpb/gowin_sdpb.v",
+  "InstLine" : 10,
+  "InstName" : "Gowin_SDPB",
+  "ModuleFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_sdpb/gowin_sdpb.v",
+  "ModuleLine" : 10,
+  "ModuleName" : "Gowin_SDPB"
+ },
+ {
+  "InstFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/main.v",
+  "InstLine" : 1,
+  "InstName" : "led",
+  "ModuleFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/main.v",
+  "ModuleLine" : 1,
+  "ModuleName" : "led",
+  "SubInsts" : [
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/main.v",
+    "InstLine" : 44,
+    "InstName" : "u_osc_generator",
+    "ModuleFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_osc/gowin_osc.v",
+    "ModuleLine" : 10,
+    "ModuleName" : "Gowin_OSC"
+   }
+  ]
+ }
+]

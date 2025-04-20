@@ -1,0 +1,19 @@
+-series GW2A
+-device GW2A-18
+-device_version C
+-package PBGA256
+-part_number GW2A-LV18PG256C8/I7
+
+
+-mod_name Gowin_SDPB
+-file_name gowin_sdpb
+-path C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_sdpb/
+-type RAM_SDP
+-file_type vlg
+-bram_b true
+-depth_0 175104
+-depth_1 175104
+-width_0 1
+-width_1 1
+-read_mode bypass
+-reset_mode async
