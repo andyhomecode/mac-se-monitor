@@ -2,15 +2,15 @@
  "Device" : "GW2A-18C",
  "Files" : [
   {
-   "Path" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_osc/gowin_osc.v",
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_osc/gowin_osc.v",
    "Type" : "verilog"
   },
   {
-   "Path" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_sdpb/gowin_sdpb.v",
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_sdpb/gowin_sdpb.v",
    "Type" : "verilog"
   },
   {
-   "Path" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/main.v",
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/main.v",
    "Type" : "verilog"
   }
  ],
@@ -18,8 +18,8 @@
 
  ],
  "LoopLimit" : 2000,
- "ResultFile" : "C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/impl/temp/rtl_parser.result",
- "Top" : "led",
+ "ResultFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/impl/temp/rtl_parser.result",
+ "Top" : "main",
  "VerilogStd" : "verilog_2001",
  "VhdlStd" : "vhdl_93"
 }

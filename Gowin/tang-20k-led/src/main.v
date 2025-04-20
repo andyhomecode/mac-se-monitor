@@ -1,4 +1,4 @@
-module led(
+module main(
     input  Clock,
     output IO_voltage,
     output clock_out,
@@ -76,25 +76,42 @@ assign five_hz = IO_voltage_reg;
 // ************************************************************
 // ****** BRAM for Frame Buffer ***********************
 
+
+// Difine the inputs for the BRAM
+wire [17:0] ada;     // CORRECT - 18 bits for address
+wire [17:0] adb;     // 
+wire din;     // 1 bit for b/w pixel
+wire dout;    // 
+
+// Also ensure your clock, reset, enable signals are declared correctly (usually single bit 'wire' or 'reg')
+wire clka;
+wire cea;
+wire reseta;
+wire clkb;
+wire ceb;
+wire resetb;
+wire oce; //
+
+
 // TODO: Created the 1 bit framebuffer but haven't implemented it yet.
 
 //Change the instance name and port connections to the signal names
 //--------Copy here to design--------
 
-//    Gowin_SDPB your_instance_name(
-//        .dout(dout), //output [31:0] dout
-//        .clka(clka), //input clka
-//        .cea(cea), //input cea
-//        .reseta(reseta), //input reseta
-//        .clkb(clkb), //input clkb
-//        .ceb(ceb), //input ceb
-//        .resetb(resetb), //input resetb
-//        .oce(oce), //input oce
-//        .ada(ada), //input [12:0] ada
-//        .din(din), //input [31:0] din
-//        .adb(adb) //input [12:0] adb
-//    );
-
+    Gowin_SDPB framebuffer(
+        .dout(dout), //output [0:0] dout
+        .clka(clka), //input clka
+        .cea(cea), //input cea
+        .reseta(reseta), //input reseta
+        .clkb(clkb), //input clkb
+        .ceb(ceb), //input ceb
+        .resetb(resetb), //input resetb
+        .oce(oce), //input oce
+        .ada(ada), //input [17:0] ada
+        .din(din), //input [0:0] din
+        .adb(adb) //input [17:0] adb
+    );
 //--------Copy end-------------------
+
 
 endmodule

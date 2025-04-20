@@ -7,7 +7,7 @@
 
 -mod_name Gowin_SDPB
 -file_name gowin_sdpb
--path C:/Users/andy/Dropbox/tang-20k-led/tang-20k-led/src/gowin_sdpb/
+-path C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_sdpb/
 -type RAM_SDP
 -file_type vlg
 -bram_b true
@@ -17,3 +17,5 @@
 -width_1 1
 -read_mode bypass
 -reset_mode async
+-init_file C:/Users/andy/Dropbox/Mac SE Monitor/framebuffer_test_pattern.mi
+-init_match port_A
