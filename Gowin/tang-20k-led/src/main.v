@@ -1,13 +1,20 @@
 module main(
     input  Clock,
-    output IO_voltage,
-    output clock_out,
-    output five_hz
+    // output IO_voltage,
+    // output clock_out,
+    // output five_hz
+
+    output mac_hsync,
+    output mac_vsync,
+    output mac_active,
+    output mac_pixel_clk
 );
 
 /********** Counter **********/
 //parameter Clock_frequency = 27_000_000; // Crystal oscillator frequency is 27Mhz
-parameter count_value       = 13_499_999; // The number of times needed to time 0.5S
+parameter count_value       = 1_499_999; // The number of times needed to time 0.5S
+
+wire IO_voltage;
 
 reg [23:0]  count_value_reg ; // counter_value
 reg         count_value_flag; // IO change flag
@@ -46,30 +53,30 @@ end
     );
 
     // 3. Wire for the buffered, low-skew clock to be used by logic
-    wire second_clk;
+    wire fifteen_clk;
 
     // 4. Instantiate a Global Clock Buffer (BUFG)
     //    Connect raw clock to BUFG input, use BUFG output for logic
     BUFG u_clk_buffer (
         .I(osc_clk_raw),   // Input is the raw oscillator clock
-        .O(second_clk)       // Output is the buffered clock
+        .O(fifteen_clk)       // Output is the buffered clock
     );
 
-reg flopper = 1'b0; // initial state
+//reg flopper = 1'b0; // initial state
 
 // output a 1/2 frequency wave 
-always @(posedge second_clk) begin
-     flopper <= ~flopper;
+//always @(posedge second_clk) begin
+//     flopper <= ~flopper;
 
-end
+//end
 
 // assign clock_out = flopper; // from the posedge 
 
-assign clock_out = second_clk; // direct from the clock
+assign clock_out = fifteen_clk; // direct from the clock
 
 /***** Add an extra line of code *****/
-assign IO_voltage = IO_voltage_reg;
-assign five_hz = IO_voltage_reg;
+//assign IO_voltage = IO_voltage_reg;
+//assign five_hz = IO_voltage_reg;
 
 
 
@@ -112,6 +119,27 @@ wire oce; //
         .adb(adb) //input [17:0] adb
     );
 //--------Copy end-------------------
+
+
+//  Mac SE timing Generator
+
+
+wire [9:0] mac_x_coord;
+wire [8:0] mac_y_coord;
+
+assign mac_pixel_clk = fifteen_clk;
+
+ mac_se_timing_generator mac_timer(
+    .clk(fifteen_clk), // real is mac_pixel_clk, IO_voltage_reg is 0.5hz Should be the target Mac SE pixel clock freq (e.g., 15.6672 MHz)
+    .rst_n(1'b1),
+    .hsync(mac_hsync),
+    .vsync(mac_vsync),
+    .active(mac_active),
+    .pixel_x(mac_x_coord), // Needs H_BITS width
+    .pixel_y(mac_y_coord)  // Needs V_BITS width
+);
+
+
 
 
 endmodule

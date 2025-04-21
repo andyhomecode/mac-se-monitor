@@ -5,9 +5,14 @@
     <Version>5</Version>
     <Device name="GW2A-18C" pn="GW2A-LV18PG256C8/I7">gw2a18c-011</Device>
     <FileList>
+        <File path="src/color_converter.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_osc/gowin_osc.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_sdpb/gowin_sdpb.v" type="file.verilog" enable="1"/>
+        <File path="src/hdmi_to_mac_se_converter.v" type="file.verilog" enable="1"/>
+        <File path="src/input_coordinate_generator.v" type="file.verilog" enable="1"/>
+        <File path="src/mac_se_timing_generator.v" type="file.verilog" enable="1"/>
         <File path="src/main.v" type="file.verilog" enable="1"/>
+        <File path="src/scaler.v" type="file.verilog" enable="1"/>
         <File path="src/simple.v" type="file.verilog" enable="0"/>
         <File path="src/tang-20k-led.cst" type="file.cst" enable="1"/>
     </FileList>

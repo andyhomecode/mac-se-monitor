@@ -78,7 +78,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Created Time</td>
-<td>Sun Apr 20 14:57:32 2025
+<td>Sun Apr 20 22:32:04 2025
 </td>
 </tr>
 <tr>
@@ -128,13 +128,13 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <td>1.8</td>
 </tr>
 <tr>
-<td class="label">IO_voltage</td>
+<td class="label">mac_hsync</td>
 <td>-</td>
-<td>L16/1</td>
+<td>T7/3</td>
 <td>Y</td>
 <td>out</td>
-<td>IOT34[A]</td>
-<td>-</td>
+<td>IOR29[A]</td>
+<td>GCLKT_3</td>
 <td>LVCMOS18</td>
 <td>8</td>
 <td>UP</td>
@@ -142,12 +142,31 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <td>NA</td>
 <td>OFF</td>
 <td>NA</td>
-<td>NA</td>
+<td>OFF</td>
 <td>NA</td>
 <td>1.8</td>
 </tr>
 <tr>
-<td class="label">clock_out</td>
+<td class="label">mac_vsync</td>
+<td>-</td>
+<td>R8/3</td>
+<td>Y</td>
+<td>out</td>
+<td>IOR29[B]</td>
+<td>GCLKC_3</td>
+<td>LVCMOS18</td>
+<td>8</td>
+<td>UP</td>
+<td>NA</td>
+<td>NA</td>
+<td>OFF</td>
+<td>NA</td>
+<td>OFF</td>
+<td>NA</td>
+<td>1.8</td>
+</tr>
+<tr>
+<td class="label">mac_active</td>
 <td>-</td>
 <td>P6/3</td>
 <td>Y</td>
@@ -166,7 +185,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <td>1.8</td>
 </tr>
 <tr>
-<td class="label">five_hz</td>
+<td class="label">mac_pixel_clk</td>
 <td>-</td>
 <td>T6/3</td>
 <td>Y</td>
@@ -768,16 +787,16 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">L16/1</td>
-<td>IO_voltage</td>
-<td>out</td>
+<td>-</td>
+<td>in</td>
 <td>IOT34[A]</td>
 <td>-</td>
 <td>LVCMOS18</td>
-<td>8</td>
+<td>NA</td>
 <td>UP</td>
+<td>ON</td>
+<td>NONE</td>
 <td>NA</td>
-<td>NA</td>
-<td>OFF</td>
 <td>NA</td>
 <td>NA</td>
 <td>NA</td>
@@ -3182,35 +3201,35 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">T7/3</td>
-<td>-</td>
-<td>in</td>
+<td>mac_hsync</td>
+<td>out</td>
 <td>IOR29[A]</td>
 <td>GCLKT_3</td>
 <td>LVCMOS18</td>
-<td>NA</td>
+<td>8</td>
 <td>UP</td>
-<td>ON</td>
-<td>NONE</td>
 <td>NA</td>
 <td>NA</td>
+<td>OFF</td>
 <td>NA</td>
+<td>OFF</td>
 <td>NA</td>
 <td>1.8</td>
 </tr>
 <tr>
 <td class="label">R8/3</td>
-<td>-</td>
-<td>in</td>
+<td>mac_vsync</td>
+<td>out</td>
 <td>IOR29[B]</td>
 <td>GCLKC_3</td>
 <td>LVCMOS18</td>
-<td>NA</td>
+<td>8</td>
 <td>UP</td>
-<td>ON</td>
-<td>NONE</td>
 <td>NA</td>
 <td>NA</td>
+<td>OFF</td>
 <td>NA</td>
+<td>OFF</td>
 <td>NA</td>
 <td>1.8</td>
 </tr>
@@ -3692,7 +3711,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">P6/3</td>
-<td>clock_out</td>
+<td>mac_active</td>
 <td>out</td>
 <td>IOR53[A]</td>
 <td>-</td>
@@ -3709,7 +3728,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">T6/3</td>
-<td>five_hz</td>
+<td>mac_pixel_clk</td>
 <td>out</td>
 <td>IOR53[B]</td>
 <td>-</td>
