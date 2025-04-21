@@ -1,5 +1,8 @@
 # Mac SE Modern Video Input Conversion
 
+## update 4/20: rewrote massive hunks, now using a Tang Nano 20k.
+## timing almost working
+
 ## Project Overview
 
 This project aims to create a custom video input solution for the classic Macintosh SE, allowing modern video input (VGA/HDMI) to be displayed on the original monochrome monitor. By utilizing an FPGA and custom signal conversion logic, we breathe new life into vintage Macintosh hardware.
