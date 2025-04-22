@@ -24,7 +24,7 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ## Timing Diagram
 
-![Mac Classic II Timing Diagram](mac classic ii timing.png)
+![Mac Classic II Timing Diagram](mac_classic_ii_timing.png)
 
 ### Display Characteristics
 - Original Resolution: 512 × 342 pixels
