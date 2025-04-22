@@ -9,6 +9,9 @@ module mac_se_timing_generator (
     output reg hsync,       // Horizontal Sync output (active low)
     output reg vsync,       // Vertical Sync output (active low)
     output reg active,      // Active display area (high when active)
+
+                                // TODO: Add just pixel number to make looking up value in BSRAM easier
+                                // or do multiplication pixel_y * 512 + pixel_x elsewhere
     output reg [9:0] pixel_x,   // Horizontal pixel coordinate (0-511 when active)
     output reg [8:0] pixel_y    // Vertical pixel coordinate (0-341 when active)
 );
