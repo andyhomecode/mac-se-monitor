@@ -24,46 +24,7 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ## Timing Diagram
 
-Horizontal Timing (One Full Line - 704 Clocks - Updated Values)
-
-<pre>
-Clock Cycle: -->
-             0       110      178                           689 690      703 704 (End/Start)
-             |<--Pulse-->|<--Back Porch-->|<-----Active Pixels----->|<Front Porch>| Total=704 clks |
-             |          |        |                             |   |        |   |
-             ▼          ▼        ▼                             ▼   ▼        ▼   ▼
-HSYNC:      _|__________|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|_           (Next Line)
-Signal      <-- LOW ---> <----------------------- HIGH ------------------------> LOW
-
-ACTIVE:     ____________|________|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|________|________           (Next Line)
-Signal      LOW          LOW      <----------- HIGH ------------->   LOW      LOW
-            <------------------ Horizontal Blanking ---------------> <- H Blank ->
-                                  <------ Active Pixel Window ------>
-</pre>
-
-- HSYNC: Goes LOW for the first 110 clocks, then HIGH for the remaining 594 clocks.
-- ACTIVE: (Assuming the current line is vertically active) Goes HIGH only during the Active Pixel Window (clocks 178-689). It's LOW during the HSYNC pulse (0-109), Back Porch (110-177), and Front Porch (690-703).
-
-Vertical Timing (One Full Frame - 370 Lines - No Change)
-
-<pre>
-Line Number: -->
-             0       3 4                27 28                                  369 370 (End/Start)
-             |<--Pulse-->|<---- VBLANK ---->|<----------- Active Lines ----------->| Total=370 Lines|
-             |       | |                |  |                                    |   |
-             ▼       ▼ ▼                ▼  ▼                                    ▼   ▼
-VSYNC:      _|_______|_|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|_          (Next Frame)
-Signal      <-- LOW --> <-------------------------- HIGH ------------------------> LOW
-
-ACTIVE:     <-------------------------- LOW ------------------------------------->          (Next Frame)
-(Vertical
- Component)  <---- Vertical Blanking ------> <------------- HIGH ----------------->
-             Line 0-27: VBLANK             Line 28-369: ACTIVE FRAME
-             (ACTIVE output is LOW)        (ACTIVE follows horizontal pattern)
-
-</pre>
-- VSYNC: Goes LOW for the first 4 lines (Lines 0-3), then HIGH.
-- ACTIVE (Vertical Component): Only allows the ACTIVE output to be potentially HIGH during Lines 28-369.
+![Mac Classic II Timing Diagram](mac classic ii timing.png)
 
 ### Display Characteristics
 - Original Resolution: 512 × 342 pixels
