@@ -8,19 +8,21 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ## Features
 
-- Modern video input compatibility (HDMI via TFP401 decoder)
-- Preservation of original Mac SE monitor functionality
-- Custom signal conversion using FPGA technology
+- Preservation of original Mac SE monitor, case, powersupply for maximum retro-nerd
+- Modern HDMI video input compatibility (800x600 60hz)
 - Nearest-neighbor scaling from 800x600 to 512x342 resolution
 - Monochrome conversion with simple RGB thresholding
 - Frame buffer for cross time-domain output synchronization
-- Low-modification approach to vintage hardware by using existing connectors
+- test pattern
 
 ## Hardware Components
 
-- Macintosh SE
+- Macintosh SE (bad logic board)
 - HDMI Decoder: TFP401
 - FPGA: Tang Nano 20k (Gowin GW2A-18)
+- connector for J12 (power for circuit and VIDEO, HSYNC, VSYNC input)
+- panel mount HDMI connector
+- FPGA 3.3v should be fine as inputs on analogue board are buffered through 74LS38 Quad 2-input NAND
 
 ## Timing Diagram
 
@@ -63,7 +65,7 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 ### Software/Tools
 - Gowin FPGA Development Environment
 - Oscilloscope
-- Gemini 2.5 Pro (Experimental)
+- Gemini 2.5 Pro (Experimental) (for vibe coding)
 - Github Co-pilot
 
 ## Potential Challenges
