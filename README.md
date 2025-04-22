@@ -74,9 +74,9 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 - Signal integrity maintenance
 - Power management
 - Resolution scaling
-- Minimal vintage hardware disruption
+- Wrong timing might fry tube
+- high voltage coil + capacitor might fry developer
 
-## Contributing
 
 ## Disclaimer
 
