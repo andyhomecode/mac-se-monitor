@@ -1,74 +1,109 @@
-# Mac SE Modern Video Input Conversion
+# Mac SE Modern Input Custom Video Card
 
-## update 4/20: rewrote massive hunks, now using a Tang Nano 20k.
-## timing almost working
+## update 4/21: Updated timing generator with Classic II specs. Added scaler, color converter, and frame buffer logic.
 
 ## Project Overview
 
-This project aims to create a custom video input solution for the classic Macintosh SE, allowing modern video input (VGA/HDMI) to be displayed on the original monochrome monitor. By utilizing an FPGA and custom signal conversion logic, we breathe new life into vintage Macintosh hardware.
+This project aims to create a custom video card for classic Macintosh SE, allowing modern HDMI video input to be displayed on the original monochrome Mac CRT monitor. Finally, I'll be able to watch youtubes on a low resolution monochrome curved monitor. 
 
 ## Features
 
-- Modern video input compatibility (VGA/USB-C to VGA)
+- Modern video input compatibility (HDMI via TFP401 decoder)
 - Preservation of original Mac SE monitor functionality
 - Custom signal conversion using FPGA technology
-- Low-modification approach to vintage hardware
+- Nearest-neighbor scaling from 800x600 to 512x342 resolution
+- Monochrome conversion with simple RGB thresholding
+- Frame buffer for cross time-domain output synchronization
+- Low-modification approach to vintage hardware by using existing connectors
 
 ## Hardware Components
 
-- Target Hardware: Macintosh SE
-- Microcontroller: Arduino
-- Clock Generator: SI5351 PLL
-- FPGA: Lattice STEP-MXO2-LPC
-- Developed online https://stepfpga.eimtechnology.com/project/3143/
-- Input Interfaces: VGA/USB-C to VGA adapter
+- Macintosh SE
+- HDMI Decoder: TFP401
+- FPGA: Tang Nano 20k (Gowin GW2A-18)
 
-## Technical Specifications
+## Timing Diagram
+
+Horizontal Timing (One Full Line - 704 Clocks - Updated Values)
+
+<pre>
+Clock Cycle: -->
+             0       110      178                           689 690      703 704 (End/Start)
+             |<--Pulse-->|<--Back Porch-->|<-----Active Pixels----->|<Front Porch>| Total=704 clks |
+             |          |        |                             |   |        |   |
+             ▼          ▼        ▼                             ▼   ▼        ▼   ▼
+HSYNC:      _|__________|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|_           (Next Line)
+Signal      <-- LOW ---> <----------------------- HIGH ------------------------> LOW
+
+ACTIVE:     ____________|________|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|________|________           (Next Line)
+Signal      LOW          LOW      <----------- HIGH ------------->   LOW      LOW
+            <------------------ Horizontal Blanking ---------------> <- H Blank ->
+                                  <------ Active Pixel Window ------>
+</pre>
+
+- HSYNC: Goes LOW for the first 110 clocks, then HIGH for the remaining 594 clocks.
+- ACTIVE: (Assuming the current line is vertically active) Goes HIGH only during the Active Pixel Window (clocks 178-689). It's LOW during the HSYNC pulse (0-109), Back Porch (110-177), and Front Porch (690-703).
+
+Vertical Timing (One Full Frame - 370 Lines - No Change)
+
+<pre>
+Line Number: -->
+             0       3 4                27 28                                  369 370 (End/Start)
+             |<--Pulse-->|<---- VBLANK ---->|<----------- Active Lines ----------->| Total=370 Lines|
+             |       | |                |  |                                    |   |
+             ▼       ▼ ▼                ▼  ▼                                    ▼   ▼
+VSYNC:      _|_______|_|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|_          (Next Frame)
+Signal      <-- LOW --> <-------------------------- HIGH ------------------------> LOW
+
+ACTIVE:     <-------------------------- LOW ------------------------------------->          (Next Frame)
+(Vertical
+ Component)  <---- Vertical Blanking ------> <------------- HIGH ----------------->
+             Line 0-27: VBLANK             Line 28-369: ACTIVE FRAME
+             (ACTIVE output is LOW)        (ACTIVE follows horizontal pattern)
+
+</pre>
+- VSYNC: Goes LOW for the first 4 lines (Lines 0-3), then HIGH.
+- ACTIVE (Vertical Component): Only allows the ACTIVE output to be potentially HIGH during Lines 28-369.
 
 ### Display Characteristics
 - Original Resolution: 512 × 342 pixels
 - Monochrome display
-- Unique vintage display timing requirements
 
-### Signal Conversion Architecture
-- Arduino-controlled clock generation
-- FPGA-based signal translation
-- Direct interface with original analog board connector
+### Key Modules
+1. **Input Coordinate Generator**: Generates pixel coordinates from HDMI input signals (HSync, VSync, Data Enable).
+2. **Color Converter**: Converts 24-bit RGB input to 1-bit monochrome using a simple thresholding method.
+3. **Scaler**: Performs nearest-neighbor scaling from 800x600 to 512x342 resolution.
+4. **Frame Buffer**: Stores scaled monochrome pixel data for synchronization with Mac SE timing.
+5. **Mac SE Timing Generator**: Generates horizontal and vertical sync signals, active display region, and pixel coordinates for the Mac SE monitor.
 
-## Project Goals
-
-1. Create a seamless video input solution for Mac SE
-2. Minimize hardware modifications
-3. Maintain original display characteristics
-4. Support multiple modern video input sources
 
 ## Development Stages
 
-
-- Got the Arduino setting the PLL working.  Check
+- Got the Arduino setting the PLL working. ✅
     Spent hours struggling because Claude couldn't set it right. 
-    Found example code and just had Claude write the timing data, which worked
-- Got a first untested draft of the Verilog for the FPGA -- untested but compiled
-    Spent an hour trying to mount the FPGA as a drive to drop the compiled .JED to it
-    Turns out I need a dumb USB-A to USB-C cable and that works.  Actual USB-C doesn't
-- TODO: Pick up from there and test the verilog code.
-- TODO: Verilog code assumes 27mhz clock, currently 16.xxxmhz.  Change PLL.
-
+    Found example code and just had Claude write the timing data, which worked.
+- Got a first untested draft of the Verilog for the FPGA -- untested but compiled. ✅
+    Spent an hour trying to mount the FPGA as a drive to drop the compiled .JED to it.
+    Turns out I need a dumb USB-A to USB-C cable and that works. Actual USB-C doesn't.
+-  Gave up on using external PLL since I got the Gowin internal clock working, no need for external PLL or Arduino to configure it
+- Vibe coded huge hunks of Verilog based on ancient technical specifications.
+- Implemented key Verilog modules:
+    - **Mac SE Timing Generator**: Updated with Classic II specs.
+    - **Scaler**: Nearest-neighbor scaling logic.
+    - **Color Converter**: Simple RGB-to-monochrome thresholding.
+    - **Frame Buffer**: Added BRAM instantiation for synchronization.
+- TODO: Test the Verilog code on hardware.
+- TODO: Verify timing and scaling accuracy.
+- TODO: Integrate HDMI input and test full pipeline.
 
 ## Prerequisites
 
-### Hardware
-- Macintosh SE with functional analog board
-- Arduino board
-- Lattice STEP-MXO2-LPC FPGA
-- SI5351 PLL Clock Generator
-- VGA/USB-C to VGA adapter
 
 ### Software/Tools
-- Arduino IDE
-- FPGA Development Environment (Lattice Diamond)
-- Signal analysis tools
-- Oscilloscope (recommended)
+- Gowin FPGA Development Environment
+- Oscilloscope
+- Gemini 2.5 Pro (Experimental)
+- Github Co-pilot
 
 ## Potential Challenges
 
@@ -78,23 +113,10 @@ This project aims to create a custom video input solution for the classic Macint
 - Resolution scaling
 - Minimal vintage hardware disruption
 
-
 ## Contributing
-
-Interested in contributing? Great! Please:
-- Fork the repository
-- Create a feature branch
-- Submit pull requests
-- Follow existing code style
-
-## Acknowledgments
-
-- Vintage Mac preservation community
-- Open-source hardware enthusiasts
-- Retro computing researchers
 
 ## Disclaimer
 
-This is an experimental project. Proceed with caution when modifying vintage hardware. Always backup and protect original components.
+This is an experimental project. Proceed with caution when modifying vintage hardware. And remember kids, electricity kills. Be very, very careful around the CRT.
 
 ## Contact
