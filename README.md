@@ -50,6 +50,14 @@ mac_hsync = T7
 mac_active = P6
 Clock (input) = H11
 
+- GPIO wiring 
+   P6  T6
+   T7  R8
+   P8  T8
+   T9  P9
+   gnd gnd
+   3v3 3v3
+
 ## Development Stages
 
 - Got the Arduino setting the PLL working. ✅

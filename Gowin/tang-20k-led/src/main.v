@@ -126,17 +126,18 @@ wire oce; //
 
 wire [9:0] mac_x_coord;
 wire [8:0] mac_y_coord;
+wire [17:0] mac_pixel; // New wire for pixel counter
 
 assign mac_pixel_clk = fifteen_clk;
 
- mac_se_timing_generator mac_timer(
-    .clk(fifteen_clk), // real is mac_pixel_clk, IO_voltage_reg is 0.5hz Should be the target Mac SE pixel clock freq (e.g., 15.6672 MHz)
-    .rst_n(1'b1),
-    .hsync(mac_hsync),
-    .vsync(mac_vsync),
-    .active(mac_active),
-    .pixel_x(mac_x_coord), // Needs H_BITS width
-    .pixel_y(mac_y_coord)  // Needs V_BITS width
+mac_se_timing_generator mac_timer(
+    .clk(fifteen_clk),       // Pixel clock input
+    .hsync(mac_hsync),       // Horizontal sync output
+    .vsync(mac_vsync),       // Vertical sync output
+    .active(mac_active),     // Active display area
+    .pixel_x(mac_x_coord),   // Horizontal pixel coordinate
+    .pixel_y(mac_y_coord),   // Vertical pixel coordinate
+    .pixel(mac_pixel)        // Pixel counter
 );
 
 
