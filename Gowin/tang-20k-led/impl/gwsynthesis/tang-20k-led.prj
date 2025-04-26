@@ -12,6 +12,7 @@
         <File path="C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v" type="verilog"/>
         <File path="C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v" type="verilog"/>
         <File path="C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\scaler.v" type="verilog"/>
+        <File path="C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\gowin_rpll\gowin_rpll.v" type="verilog"/>
     </FileList>
     <OptionList>
         <Option type="disable_insert_pad" value="0"/>

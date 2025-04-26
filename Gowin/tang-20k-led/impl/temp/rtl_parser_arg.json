@@ -32,6 +32,10 @@
   {
    "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/scaler.v",
    "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_rpll/gowin_rpll.v",
+   "Type" : "verilog"
   }
  ],
  "IncludePath" : [

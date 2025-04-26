@@ -1,5 +1,8 @@
 module main(
     input  Clock,
+    input T5,  // Switch for Number5
+    input T4,  // Switch for Number4
+    input E8,  // Switch for Number3
     // output IO_voltage,
     // output clock_out,
     // output five_hz
@@ -7,7 +10,11 @@ module main(
     output mac_hsync,
     output mac_vsync,
     output mac_active,
-    output mac_pixel_clk
+    output mac_pixel_clk,
+    output test_pattern, // New output for test pattern video
+    output L16, // LED for Number5
+    output L14, // LED for Number4
+    output N14  // LED for Number3
 );
 
 /********** Counter **********/
@@ -140,7 +147,17 @@ mac_se_timing_generator mac_timer(
     .pixel(mac_pixel)        // Pixel counter
 );
 
+// Test pattern logic based on switches
+// ANDY: I don't love the patterns yet, but will work on that later
+assign test_pattern = (T5) ? (mac_x_coord[0] == 1'b0) : // Pattern 1: High if x-coordinate is even
+                      (T4) ? (mac_y_coord[0] == 1'b0) : // Pattern 2: High if y-coordinate is even
+                      (T5 & T4) ? ((mac_x_coord + mac_y_coord) % 2 == 0) : // Pattern 3: Checkerboard
+                      (E8) ? (((mac_x_coord[3] ^ mac_y_coord[3]) == 1'b0)) : // Pattern 4: Larger checkerboard
+                      1'b0; // Default: Low
 
-
+// Connect switches to LEDs
+assign L16 = T5;      // LED L16 lights up if T5 is on
+assign L14 = T4;      // LED L14 lights up if T4 is on
+assign N14 = E8;      // LED N14 lights up if E8 is on
 
 endmodule
