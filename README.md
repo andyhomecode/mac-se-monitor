@@ -42,6 +42,14 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 Diagram here:
 https://miro.com/app/board/uXjVI_tZUDw=/
 
+## I/O Wiring
+
+mac_vsync = R8
+mac_pixel_clk = T6
+mac_hsync = T7
+mac_active = P6
+Clock (input) = H11
+
 ## Development Stages
 
 - Got the Arduino setting the PLL working. ✅

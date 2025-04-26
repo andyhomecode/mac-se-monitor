@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Module name="main" T_Register="22(0)" T_Alu="17(0)" T_Lut="20(0)">
+<Module name="main" T_Register="22(0)" T_Alu="17(0)" T_Lut="19(0)">
  <SubModule name="u_osc_generator"/>
- <SubModule name="mac_timer" Register="22" Alu="17" Lut="20" T_Register="22(22)" T_Alu="17(17)" T_Lut="20(20)"/>
+ <SubModule name="mac_timer" Register="22" Alu="17" Lut="19" T_Register="22(22)" T_Alu="17(17)" T_Lut="19(19)"/>
 </Module>

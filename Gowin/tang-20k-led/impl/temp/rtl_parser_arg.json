@@ -2,19 +2,15 @@
  "Device" : "GW2A-18C",
  "Files" : [
   {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/color_converter.v",
+   "Type" : "verilog"
+  },
+  {
    "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_osc/gowin_osc.v",
    "Type" : "verilog"
   },
   {
    "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_sdpb/gowin_sdpb.v",
-   "Type" : "verilog"
-  },
-  {
-   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/main.v",
-   "Type" : "verilog"
-  },
-  {
-   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/color_converter.v",
    "Type" : "verilog"
   },
   {
@@ -27,6 +23,10 @@
   },
   {
    "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/mac_se_timing_generator.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/main.v",
    "Type" : "verilog"
   },
   {

@@ -1,22 +1,22 @@
 GowinSynthesis start
 Running parser ...
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\color_converter.v'
 Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\gowin_osc\gowin_osc.v'
 Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\gowin_sdpb\gowin_sdpb.v'
-Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v'
-Undeclared symbol 'clock_out', assumed default net type 'wire'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":75)
-Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\color_converter.v'
 Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\hdmi_to_mac_se_converter.v'
 Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\input_coordinate_generator.v'
 Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v'
+Undeclared symbol 'clock_out', assumed default net type 'wire'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":75)
 Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\scaler.v'
 Compiling module 'main'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":1)
 Compiling module 'Gowin_OSC'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\gowin_osc\gowin_osc.v":10)
 Compiling module 'Gowin_SDPB'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\gowin_sdpb\gowin_sdpb.v":10)
 Compiling module 'mac_se_timing_generator'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":5)
-WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":66)
-WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":69)
-WARN  (EX3791) : Expression size 32 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":101)
-WARN  (EX3791) : Expression size 32 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":102)
+WARN  (EX3791) : Expression size 10 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":68)
+WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":71)
+WARN  (EX3791) : Expression size 32 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":105)
+WARN  (EX3791) : Expression size 32 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":106)
 WARN  (EX1998) : Net 'ada[17]' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":88)
 WARN  (EX1998) : Net 'adb[17]' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":89)
 WARN  (EX1998) : Net 'din' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":90)
