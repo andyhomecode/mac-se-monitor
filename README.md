@@ -30,7 +30,7 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ![Mac Classic II Timing Diagram](mac_classic_ii_timing.png)
 
-![OSCOPE of HSYNC VSYNC and DATA](oscope-saves/20224-04-25-HSYNC-VSYNC-VIDEO.png)
+![OSCOPE of HSYNC VSYNC and DATA](2024-04-25-HSYNC-VSYNC-VIDEO.png)
 
 ### Display Characteristics
 - Original Resolution: 512 × 342 pixels
