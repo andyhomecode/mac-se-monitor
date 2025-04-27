@@ -19,13 +19,12 @@ WARN  (EX3791) : Expression size 11 truncated to fit in target size 10("C:\Users
 WARN  (EX3791) : Expression size 32 truncated to fit in target size 10("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":70)
 WARN  (EX3791) : Expression size 32 truncated to fit in target size 9("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":71)
 WARN  (EX3791) : Expression size 19 truncated to fit in target size 18("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\mac_se_timing_generator.v":72)
-WARN  (EX1998) : Net 'ada[17]' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":39)
-WARN  (EX1998) : Net 'din' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":40)
-WARN  (EX1998) : Net 'clka' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":41)
-WARN  (EX1998) : Net 'cea' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":41)
+WARN  (EX1998) : Net 'ada[17]' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":51)
+WARN  (EX1998) : Net 'din' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":52)
+WARN  (EX1998) : Net 'clka' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":53)
+WARN  (EX1998) : Net 'cea' does not have a driver("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":53)
 NOTE  (EX0101) : Current top module is "main"
 [5%] Running netlist conversion ...
-WARN  (CV0016) : Input Clock is unused("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\tang-20k-led\src\main.v":2)
 Running device independent optimization ...
 [10%] Optimizing Phase 0 completed
 [15%] Optimizing Phase 1 completed

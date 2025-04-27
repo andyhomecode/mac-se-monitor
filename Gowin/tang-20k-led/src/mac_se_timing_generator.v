@@ -4,8 +4,7 @@
 
 
 module mac_se_timing_generator (
-    input wire clk,         // Pixel clock input (e.g., 15.6672 MHz)
-
+    input wire clk,         // Pixel clock input (should be 15.6672 MHz but it's not--onboard clock is close)
     output reg hsync,       // Horizontal Sync output (active low)
     output reg vsync,       // Vertical Sync output (active low)
     output reg active,      // Active display area (high when active)

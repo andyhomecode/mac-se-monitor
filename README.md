@@ -1,6 +1,6 @@
 # Mac SE Modern Input Custom Video Card
 
-## update 4/21: Updated timing generator with Classic II specs. Added scaler, color converter, and frame buffer logic.
+## update 2025 05 26 Displaying cute Mac icon from framebuffer! The uncharted world of outputting Mac SE video is behind us!
 
 ## Project Overview
 
@@ -92,7 +92,12 @@ Clock (input) = unused
 - fiddled with the front porch and other timings and got it looking good
 - Got the BSRAM initialized with the Mac Icon and hooked showing it (vibe coded a BMP -> initialization file formatter in python, bram_initializer.py)
 
-## Prerequisites
+## TODO
+
+- TODO: Read in the HDMI data NOT STARTED TESTING VIBE CODE
+- TODO: Test the scaler NOT STARTED TESTING VIBE CODE
+- TODO: test the color_converter   NOT STARTED TESTING VIBE CODE
+- TODO: write the pixels into Port A of the framebuffer
 
 
 ### Software/Tools
