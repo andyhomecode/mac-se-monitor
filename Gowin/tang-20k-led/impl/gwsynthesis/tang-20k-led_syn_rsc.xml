@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Module name="main" Register="1" T_Register="63(1)" T_Alu="17(0)" T_Lut="87(0)" T_Bsram="11(0)">
- <SubModule name="u_osc_generator"/>
- <SubModule name="mac_clock_pll"/>
- <SubModule name="framebuffer" Register="4" Lut="32" Bsram="11" T_Register="4(4)" T_Lut="32(32)" T_Bsram="11(11)"/>
- <SubModule name="mac_timer" Register="58" Alu="17" Lut="55" T_Register="58(58)" T_Alu="17(17)" T_Lut="55(55)"/>
-</Module>
