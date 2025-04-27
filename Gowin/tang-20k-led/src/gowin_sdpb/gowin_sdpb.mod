@@ -17,5 +17,5 @@
 -width_1 1
 -read_mode bypass
 -reset_mode async
--init_file C:/Users/andy/Dropbox/Mac SE Monitor/framebuffer_test_pattern.mi
+-init_file C:/Users/andy/Dropbox/Mac SE Monitor/macicon.mi
 -init_match port_A

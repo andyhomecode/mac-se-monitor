@@ -1,26 +1,35 @@
+import argparse
+from PIL import Image  # Pillow is the modern replacement for PIL
 
+def generate_framebuffer_from_bmp(input_bmp, output_filename):
+    # Open the BMP file
+    img = Image.open(input_bmp).convert('1')  # Convert to black and white
+    width, height = img.size
 
+    if width != 512 or height != 342:
+        raise ValueError("Input BMP must be 512x342 in size.")
 
-def generate_framebuffer_test_file(filename, width=512, height=342):
-    with open(filename, 'w') as f:
-        # Write a header line indicating format and size
+    # Open the output file
+    with open(output_filename, 'w') as f:
+        # Write the header
         f.write(f"#File_format=Bin\n")
-        f.write(f"#Address_depth=175104\n")
+        f.write(f"#Address_depth={width * height}\n")
         f.write(f"#Data_width=1\n")
-        # Loop through each pixel
-        for x in range(14592):  # divided by 12
-            f.write(f"1\n")
-            f.write(f"0\n")
-            f.write(f"1\n")
-            f.write(f"0\n")
-            f.write(f"1\n")
-            f.write(f"0\n")
-            f.write(f"1\n")
-            f.write(f"1\n")
-            f.write(f"1\n")
-            f.write(f"0\n")
-            f.write(f"0\n")
-            f.write(f"0\n")
- 
-# Call the function
-generate_framebuffer_test_file('framebuffer_test_pattern.mi')
+
+        # Write pixel data
+        for y in range(height):
+            for x in range(width):
+                pixel = img.getpixel((x, y))  # Get pixel value (0 or 255)
+                f.write(f"{1 if pixel == 255 else 0}\n")  # Write 1 for white, 0 for black
+            # f.write("\n")  # Newline after each row
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate framebuffer test file from a BMP image.")
+    parser.add_argument("input_bmp", help="Path to the input BMP file (must be 512x342 and black-and-white).")
+    parser.add_argument("output_filename", help="Path to the output file to generate.")
+    args = parser.parse_args()
+
+    generate_framebuffer_from_bmp(args.input_bmp, args.output_filename)
+
+if __name__ == "__main__":
+    main()
