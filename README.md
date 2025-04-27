@@ -43,6 +43,8 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 4. **Frame Buffer**: Stores scaled monochrome pixel data for synchronization with Mac SE timing.  DONE. It's 175104x1 to avoid having to do multiplication, but might need to change to match Mac's 512x342 to make writing easier.
 5. **Mac SE Timing Generator**: Generates horizontal and vertical sync signals, active display region, and pixel coordinates for the Mac SE monitor. DONE mac_se_timing_generator.v does all the heavy lifting.
 
+!(Block Diagram)[miro-Mac-FPGA.jpg]
+
 Diagram here:
 https://miro.com/app/board/uXjVI_tZUDw=/
 
