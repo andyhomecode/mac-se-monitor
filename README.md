@@ -6,7 +6,7 @@
 
 This project aims to create a custom video card for classic Macintosh SE, allowing modern HDMI video input to be displayed on the original monochrome Mac CRT monitor. Finally, I'll be able to watch youtubes on a low resolution monochrome curved monitor. 
 
-![Look at this happy Mac SE](2025 04 26 Mac Logo from framebuffer-2.jpg)
+![Look at this happy Mac SE](2025-04-26-Mac-Logo-from-framebuffer-2.jpg)
 
 ## Features
 
