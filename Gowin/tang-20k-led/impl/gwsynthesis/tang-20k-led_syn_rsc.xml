@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Module name="main" Lut="3" T_Register="26(0)" T_Alu="17(0)" T_Lut="25(3)">
+<Module name="main" Lut="3" T_Register="26(0)" T_Alu="17(0)" T_Lut="28(3)">
  <SubModule name="u_osc_generator"/>
- <SubModule name="mac_timer" Register="26" Alu="17" Lut="22" T_Register="26(26)" T_Alu="17(17)" T_Lut="22(22)"/>
+ <SubModule name="mac_clock_pll"/>
+ <SubModule name="mac_timer" Register="26" Alu="17" Lut="25" T_Register="26(26)" T_Alu="17(17)" T_Lut="25(25)"/>
 </Module>

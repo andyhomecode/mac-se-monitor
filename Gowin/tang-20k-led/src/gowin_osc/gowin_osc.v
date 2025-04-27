@@ -15,7 +15,7 @@ OSC osc_inst (
     .OSCOUT(oscout)
 );
 
-defparam osc_inst.FREQ_DIV = 16;  // that seems to produce 15.27mhz.  Close to Mac pixel clock
+defparam osc_inst.FREQ_DIV = 2;  // that seems to produce 15.27mhz.  Close to Mac pixel clock
 defparam osc_inst.DEVICE = "GW2A-18C";
 
 endmodule //Gowin_OSC

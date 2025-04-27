@@ -17,35 +17,35 @@ module main(
     output N14  // LED for Number3
 );
 
-/********** Counter **********/
-//parameter Clock_frequency = 27_000_000; // Crystal oscillator frequency is 27Mhz
-parameter count_value       = 1_499_999; // The number of times needed to time 0.5S
+// /********** Counter **********/
+// //parameter Clock_frequency = 27_000_000; // Crystal oscillator frequency is 27Mhz
+// parameter count_value       = 1_499_999; // The number of times needed to time 0.5S
 
-wire IO_voltage;
+// wire IO_voltage;
 
-reg [23:0]  count_value_reg ; // counter_value
-reg         count_value_flag; // IO change flag
+// reg [23:0]  count_value_reg ; // counter_value
+// reg         count_value_flag; // IO change flag
 
-always @(posedge Clock) begin
-    if ( count_value_reg <= count_value ) begin //not count to 0.5S
-        count_value_reg  <= count_value_reg + 1'b1; // Continue counting
-        count_value_flag <= 1'b0 ; // No flip flag
-    end
-    else begin //Count to 0.5S
-        count_value_reg  <= 23'b0; // Clear counter,prepare for next time counting.
-        count_value_flag <= 1'b1 ; // Flip flag
-    end
-end
+// always @(posedge Clock) begin
+//     if ( count_value_reg <= count_value ) begin //not count to 0.5S
+//         count_value_reg  <= count_value_reg + 1'b1; // Continue counting
+//         count_value_flag <= 1'b0 ; // No flip flag
+//     end
+//     else begin //Count to 0.5S
+//         count_value_reg  <= 23'b0; // Clear counter,prepare for next time counting.
+//         count_value_flag <= 1'b1 ; // Flip flag
+//     end
+// end
 
-/********** IO voltage flip **********/
-reg IO_voltage_reg = 1'b0; // Initial state
+// /********** IO voltage flip **********/
+// reg IO_voltage_reg = 1'b0; // Initial state
 
-always @(posedge Clock) begin
-    if ( count_value_flag )  //  Flip flag, runs once ever 1/2 second
-        IO_voltage_reg <= ~IO_voltage_reg; // IO voltage flip
-    else //  No flip flag
-        IO_voltage_reg <= IO_voltage_reg; // IO voltage constant
-end
+// always @(posedge Clock) begin
+//     if ( count_value_flag )  //  Flip flag, runs once ever 1/2 second
+//         IO_voltage_reg <= ~IO_voltage_reg; // IO voltage flip
+//     else //  No flip flag
+//         IO_voltage_reg <= IO_voltage_reg; // IO voltage constant
+// end
 
 
 
@@ -62,12 +62,19 @@ end
     // 3. Wire for the buffered, low-skew clock to be used by logic
     wire fifteen_clk;
 
-    // 4. Instantiate a Global Clock Buffer (BUFG)
-    //    Connect raw clock to BUFG input, use BUFG output for logic
-    BUFG u_clk_buffer (
-        .I(osc_clk_raw),   // Input is the raw oscillator clock
-        .O(fifteen_clk)       // Output is the buffered clock
+    Gowin_rPLL mac_clock_pll(
+        .clkout(fifteen_clk), //output clkout
+        .clkin(osc_clk_raw) //input clkin
     );
+
+
+
+//     4. Instantiate a Global Clock Buffer (BUFG)
+//        Connect raw clock to BUFG input, use BUFG output for logic
+//    BUFG u_clk_buffer (
+//        .I(osc_clk_raw),   // Input is the raw oscillator clock
+//        .O(fifteen_clk)       // Output is the buffered clock
+//    );
 
 //reg flopper = 1'b0; // initial state
 

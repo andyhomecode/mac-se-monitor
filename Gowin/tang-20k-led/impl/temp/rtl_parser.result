@@ -17,7 +17,15 @@
    },
    {
     "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/main.v",
-    "InstLine" : 115,
+    "InstLine" : 65,
+    "InstName" : "mac_clock_pll",
+    "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_rpll/gowin_rpll.v",
+    "ModuleLine" : 10,
+    "ModuleName" : "Gowin_rPLL"
+   },
+   {
+    "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/main.v",
+    "InstLine" : 122,
     "InstName" : "framebuffer",
     "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_sdpb/gowin_sdpb.v",
     "ModuleLine" : 10,
@@ -25,20 +33,12 @@
    },
    {
     "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/main.v",
-    "InstLine" : 140,
+    "InstLine" : 147,
     "InstName" : "mac_timer",
     "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/mac_se_timing_generator.v",
     "ModuleLine" : 6,
     "ModuleName" : "mac_se_timing_generator"
    }
   ]
- },
- {
-  "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_rpll/gowin_rpll.v",
-  "InstLine" : 10,
-  "InstName" : "Gowin_rPLL",
-  "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/tang-20k-led/src/gowin_rpll/gowin_rpll.v",
-  "ModuleLine" : 10,
-  "ModuleName" : "Gowin_rPLL"
  }
 ]

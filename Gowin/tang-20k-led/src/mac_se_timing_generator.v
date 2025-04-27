@@ -21,7 +21,7 @@ module mac_se_timing_generator (
     parameter H_FRONT_PORCH   = 14;
 
     parameter H_SYNC_END      = H_SYNC_PULSE;
-    parameter H_ACTIVE_START  = 192;
+    parameter H_ACTIVE_START  = 185;  // ANDY: WAS 192 but test pattern too far right. This is good. 
     parameter H_ACTIVE_END    = H_ACTIVE_START + H_ACTIVE - 1;
 
     parameter V_TOTAL           = 370;

@@ -89,7 +89,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Created Time</td>
-<td>Sat Apr 26 19:02:54 2025
+<td>Sat Apr 26 20:24:45 2025
 </td>
 </tr>
 <tr>
@@ -161,7 +161,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <table class="summary_table">
 <tr>
 <td class="label">Total Power (mW)</td>
-<td>122.214</td>
+<td>123.898</td>
 </tr>
 <tr>
 <td class="label">Quiescent Power (mW)</td>
@@ -169,14 +169,14 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Dynamic Power (mW)</td>
-<td>1.025</td>
+<td>2.709</td>
 </tr>
 </table>
 <h2><a name="Thermal_Info">Thermal Information:</a></h2>
 <table class="summary_table">
 <tr>
 <td class="label">Junction Temperature</td>
-<td>28.913</td>
+<td>28.967</td>
 </tr>
 <tr>
 <td class="label">Theta JA</td>
@@ -184,7 +184,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Max Allowed Ambient Temperature</td>
-<td>81.087</td>
+<td>81.033</td>
 </tr>
 </table>
 <h2><a name="Supply_Summary">Supply Information:</a></h2>
@@ -199,23 +199,23 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <tr>
 <td>VCC</td>
 <td>1.000</td>
-<td>0.193</td>
+<td>1.871</td>
 <td>69.989</td>
-<td>70.182</td>
+<td>71.860</td>
 </tr>
 <tr>
 <td>VCCX</td>
 <td>3.300</td>
-<td>0.164</td>
+<td>0.165</td>
 <td>15.000</td>
-<td>50.040</td>
+<td>50.044</td>
 </tr>
 <tr>
 <td>VCCIO18</td>
 <td>1.800</td>
-<td>0.162</td>
+<td>0.163</td>
 <td>0.945</td>
-<td>1.992</td>
+<td>1.994</td>
 </tr>
 </table>
 <h1><a name="Detail">Power Details</a></h1>
@@ -229,15 +229,21 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td>Logic</td>
-<td>0.026</td>
+<td>0.027</td>
 <td>NA</td>
-<td>1.953</td>
+<td>2.003</td>
 </tr>
 <tr>
 <td>IO</td>
-<td>4.444
+<td>4.451
 <td>3.449
-<td>4.297
+<td>4.320
+</tr>
+<tr>
+<td>PLL</td>
+<td>1.676
+<td>NA</td>
+<td>NA</td>
 </tr>
 </table>
 <h2><a name="By_Hierarchy">Power By Hierarchy:</a></h2>
@@ -249,12 +255,16 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td>main</td>
-<td>0.026</td>
-<td>0.026(0.025)</td>
+<td>1.703</td>
+<td>1.703(1.703)</td>
+<tr>
+<td>main/mac_clock_pll/</td>
+<td>1.676</td>
+<td>1.676(0.000)</td>
 <tr>
 <td>main/mac_timer/</td>
-<td>0.025</td>
-<td>0.025(0.000)</td>
+<td>0.026</td>
+<td>0.026(0.000)</td>
 </table>
 <h2><a name="By_Clock_Domain">Power By Clock Domain:</a></h2>
 <table class="detail_table">
@@ -264,9 +274,14 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <th class="label">Total Dynamic Power(mW)</th>
 </tr>
 <tr>
-<td>u_osc_generator/osc_inst/OSCOUT.default_clk</td>
-<td>15.625</td>
+<td>mac_clock_pll/rpll_inst/CLKOUT.default_gen_clk</td>
+<td>16.026</td>
 <td>0.030</td>
+</tr>
+<tr>
+<td>u_osc_generator/osc_inst/OSCOUT.default_clk</td>
+<td>125.000</td>
+<td>1.676</td>
 </tr>
 </table>
 </div><!-- content -->

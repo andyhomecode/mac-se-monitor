@@ -83,7 +83,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Created Time</td>
-<td>Sat Apr 26 19:02:54 2025
+<td>Sat Apr 26 20:24:45 2025
 </td>
 </tr>
 <tr>
@@ -97,24 +97,24 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <tr>
 <td class="label">Place & Route Process</td>
 <td>Running placement:
-   Placement Phase 0: CPU time = 0h 0m 0.006s, Elapsed time = 0h 0m 0.006s
-   Placement Phase 1: CPU time = 0h 0m 0.324s, Elapsed time = 0h 0m 0.323s
-   Placement Phase 2: CPU time = 0h 0m 0.002s, Elapsed time = 0h 0m 0.002s
-   Placement Phase 3: CPU time = 0h 0m 0.834s, Elapsed time = 0h 0m 0.834s
+   Placement Phase 0: CPU time = 0h 0m 0.007s, Elapsed time = 0h 0m 0.006s
+   Placement Phase 1: CPU time = 0h 0m 0.282s, Elapsed time = 0h 0m 0.282s
+   Placement Phase 2: CPU time = 0h 0m 0.001s, Elapsed time = 0h 0m 0.001s
+   Placement Phase 3: CPU time = 0h 0m 0.748s, Elapsed time = 0h 0m 0.748s
    Total Placement: CPU time = 0h 0m 1s, Elapsed time = 0h 0m 1s
 Running routing:
-   Routing Phase 0: CPU time = 0h 0m 0.001s, Elapsed time = 0h 0m 0s
-   Routing Phase 1: CPU time = 0h 0m 0.161s, Elapsed time = 0h 0m 0.162s
-   Routing Phase 2: CPU time = 0h 0m 0.124s, Elapsed time = 0h 0m 0.124s
+   Routing Phase 0: CPU time = 0h 0m 0s, Elapsed time = 0h 0m 0s
+   Routing Phase 1: CPU time = 0h 0m 0.137s, Elapsed time = 0h 0m 0.137s
+   Routing Phase 2: CPU time = 0h 0m 0.108s, Elapsed time = 0h 0m 0.108s
    Routing Phase 3: CPU time = 0h 0m 0s, Elapsed time = 0h 0m 0s
-   Total Routing: CPU time = 0h 0m 0.286s, Elapsed time = 0h 0m 0.286s
+   Total Routing: CPU time = 0h 0m 0.245s, Elapsed time = 0h 0m 0.245s
 Generate output files:
    CPU time = 0h 0m 2s, Elapsed time = 0h 0m 2s
 </td>
 </tr>
 <tr>
 <td class="label">Total Time and Memory Usage</td>
-<td>CPU time = 0h 0m 4s, Elapsed time = 0h 0m 4s, Peak memory usage = 435MB</td>
+<td>CPU time = 0h 0m 3s, Elapsed time = 0h 0m 3s, Peak memory usage = 442MB</td>
 </tr>
 </table>
 <br/>
@@ -129,12 +129,12 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">Logic</td>
-<td>43/20736</td>
+<td>46/20736</td>
 <td><1%</td>
 </tr>
 <tr>
 <td class="label">&nbsp &nbsp --LUT,ALU,ROM16</td>
-<td>43(24 LUT, 19 ALU, 0 ROM16)</td>
+<td>46(27 LUT, 19 ALU, 0 ROM16)</td>
 <td>-</td>
 </tr>
 <tr>
@@ -169,7 +169,7 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">CLS</td>
-<td>27/10368</td>
+<td>28/10368</td>
 <td><1%</td>
 </tr>
 <tr>
@@ -247,8 +247,8 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">PRIMARY</td>
-<td>1/8</td>
-<td>13%</td>
+<td>2/8</td>
+<td>25%</td>
 </tr>
 <tr>
 <td class="label">LW</td>
@@ -265,6 +265,11 @@ Generate output files:
 <td>1/1</td>
 <td>100%</td>
 </tr>
+<tr>
+<td class="label">rPLL</td>
+<td>1/4</td>
+<td>25%</td>
+</tr>
 </table>
 <br/>
 <h2><a name="Global_Clock_Signals">Global Clock Signals:</a></h2>
@@ -277,7 +282,12 @@ Generate output files:
 <tr>
 <td class="label">osc_clk_raw</td>
 <td>PRIMARY</td>
-<td> TR TL BR BL</td>
+<td> TL</td>
+</tr>
+<tr>
+<td class="label">mac_pixel_clk_d</td>
+<td>PRIMARY</td>
+<td> TR TL BR</td>
 </tr>
 </table>
 <br/>
