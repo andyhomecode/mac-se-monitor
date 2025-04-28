@@ -1,7 +1,7 @@
 import argparse
 from PIL import Image  
 
-# ANDY MAXWELL 2025 04 26
+# Vibe Coded by ANDY MAXWELL 2025 04 26
 # produces the framebuffer initializer file format for GOWIN FPGA IP Core BSRAM
 # feed it a mac SE dimensioned BMP file, ideally black & white but it'll convert it
 # part of the Mac SE HDMI video card project
