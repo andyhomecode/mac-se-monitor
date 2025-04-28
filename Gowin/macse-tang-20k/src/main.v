@@ -5,16 +5,40 @@ module main(
     output mac_vsync,
     output mac_active, // output for diagnostic
     output mac_pixel_clk, // output for diagnostic
-    output reg video_out // Changed to reg for procedural assignment
-/*
+    output reg video_out, // Changed to reg for procedural assignment
+
+    // TTL RGB in
+    input rgb_r3_N7, // most significant bits of Red, Green, Blue
+    input rgb_r4_N6,
+    input rgb_g3_P7,
+    input rgb_g4_R7,
+    input rgb_g5_D10, // I don't know why Green has 6 bits and the others just get 5
+    input rgb_b3_A14,
+    input rgb_b4_B14,
+
+    input rgb_odck, // R9 PIXCLK
+    input rgb_hsync, // A15
+    input rgb_vsync,  // D15
+    input rgb_de,  // E15 DISPEN on the Adafruit board schematic
+
+    // input rgb_bl, // Backlight control, not used
+    // input tp_* // for the Touch Screen, Mac SE doesn't have one.
+
+
     // --- Switches and LEDs for test settings, not used currently ---
     input T5,  // Switch for Number5
-    input T4,  // Switch for Number4
-    input E8,  // Switch for Number3
+//    input T4,  // Switch for Number4
+//    input E8,  // Switch for Number3
 
-    output L16, // LED for Number5
-    output L14, // LED for Number4
-    output N14  // LED for Number3 */
+
+    output reg LED5_L16, 
+    output reg LED4_L14, 
+    output reg LED3_N14,  
+    output reg LED2_N16,
+
+    // couple of outputs for the o'scope
+    //output reg T9,
+    output P9
 );
 
     // --- Clock Generation and Buffering for 15.xx MHz pixel clock ---
@@ -133,5 +157,17 @@ module main(
 // TODO: Test the scaler NOT STARTED TESTING VIBE CODE
 // TODO: test the color_converter   NOT STARTED TESTING VIBE CODE
 // TODO: write the pixels into Port A of the framebuffer
+
+// ************** HDMI CODE BELOW HERE ******
+
+    // 2024 04 27 ANDY'S LOG.  NOTHING WORKS.
+    // I can't seem to get any data from HDMI in, out of P9
+    // other stuff does, but it looks like no data is coming from
+    // the HDMI.  Looking at traces on the board, I think it's giving
+    // data out the 40-pin wire, but maybe not showing up in the FPGA?
+
+    // assign P9 = 1'b0; // show when the display is active on the LED
+    assign P9 = T5;
+    
 
 endmodule
