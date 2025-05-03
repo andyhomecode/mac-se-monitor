@@ -74,6 +74,16 @@ Clock (input) = unused
     nc          6   13  +5v
     nc          7   14  +12v (probably will use this to power project)
 
+- TFP401
+Note, the TFP-40p cable only works when upside down (electrical connections on top, not bottom), so all connections are x = x - 41 (40=1, 39=2, etc.)
+
+    12 (29) = gnd
+    11 (30) = Pixel Clock
+    10 (31) = Active
+    9 (32) = HSYNC
+    8 (33) = VSYNC
+    7 (34) = DISPLAY ENABLE
+
 ## Development Stages
 
 - Got the Arduino setting the PLL working.
@@ -95,10 +105,11 @@ Clock (input) = unused
 - video was a little to the right because the clock was a little slow
 - fiddled with the front porch and other timings and got it looking good
 - Got the BSRAM initialized with the Mac Icon and hooked showing it (vibe coded a BMP -> initialization file formatter in python, bram_initializer.py)
+- 2025 05 03 Figured out why I couldn't read any data from the TFP401--the flat ribbon cable only makes electrical connection when upside down.  Pin 40 is now 1. 
 
 ## TODO
 
-- TODO: Read in the HDMI data NOT STARTED TESTING VIBE CODE
+- TODO: Read in the HDMI data START NOW THAT I KNOW UPSIDE DOWN CABLE
 - TODO: Test the scaler NOT STARTED TESTING VIBE CODE
 - TODO: test the color_converter   NOT STARTED TESTING VIBE CODE
 - TODO: write the pixels into Port A of the framebuffer
