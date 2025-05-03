@@ -78,6 +78,8 @@ Note, the TFP-40p cable only works when upside down (electrical connections on t
     9 (32) = HSYNC
     8 (33) = VSYNC
     7 (34) = DISPLAY ENABLE
+
+But, if I plug the flat cable into the FPGA upside-down (conductive side up) also, everything is back where it should be.
 ```
 ## Development Stages
 

@@ -129,45 +129,77 @@ module main(
         video_out <= dout; // Use the framebuffer data
     end
 
-/*     // --- Test Pattern Logic ---  COMMENTED OUT SINCE IT WORKS
-    always @(*) begin
-        if (T5) begin
-            video_out = (mac_x_coord[0] == 1'b0); // Pattern 1: High if x-coordinate is even
-        end else if (T4) begin
-            video_out = (mac_y_coord[0] == 1'b0); // Pattern 2: High if y-coordinate is even
-        end else if (T5 & T4) begin
-            // pattern 3: Checkerboard is the coolest BY FAR
-            video_out = ((mac_x_coord + mac_y_coord) % 2 == 0); // Pattern 3: Checkerboard
-        end else if (E8) begin
-            video_out = ((mac_x_coord[3] ^ mac_y_coord[3]) == 1'b0); // Pattern 4: Larger checkerboard
-        end else begin
-            video_out = ((mac_x_coord + mac_y_coord) % 2 == 0); // Pattern 3: Checkerboard
-            // video_out = dout; // Use the framebuffer data
-        end
-    end 
+    /////////////////////////////
+    /////// HDMI DECODER SECTION //////////
+    /////////////////////////////
 
-    // --- LED Connections to show which switch is on ---
-    assign L16 = T5; // LED L16 lights up if T5 is on
-    assign L14 = T4; // LED L14 lights up if T4 is on
-    assign N14 = E8; // LED N14 lights up if E8 is on
+    // --- Input Coordinate Generator ---
+    wire [$clog2(800)-1:0] input_x; // Input X coordinate
+    wire [$clog2(480)-1:0] input_y; // Input Y coordinate
+    wire input_coord_valid;
 
-*/
+    input_coordinate_generator #(
+        .H_ACTIVE(800),
+        .V_ACTIVE(480)
+    ) input_coord_gen (
+        .clk(rgb_odck),
+        .reset(1'b0),
+        .hs(rgb_hsync),
+        .vs(rgb_vsync),
+        .de(rgb_de),
+        .valid_out(input_coord_valid),
+        .x_out(input_x),
+        .y_out(input_y)
+    );
 
-// TODO: Read in the HDMI data NOT STARTED TESTING VIBE CODE
-// TODO: Test the scaler NOT STARTED TESTING VIBE CODE
-// TODO: test the color_converter   NOT STARTED TESTING VIBE CODE
-// TODO: write the pixels into Port A of the framebuffer
+    // --- Color Converter ---
+    wire mono_pixel;
 
-// ************** HDMI CODE BELOW HERE ******
+    color_converter color_conv (
+        .clk(rgb_odck),
+        .reset(1'b0),
+        .enable(input_coord_valid),
+        .rgb_r3_N7(rgb_r3_N7),
+        .rgb_r4_N6(rgb_r4_N6),
+        .rgb_g3_P7(rgb_g3_P7),
+        .rgb_g4_R7(rgb_g4_R7),
+        .rgb_g5_D10(rgb_g5_D10),
+        .rgb_b3_A14(rgb_b3_A14),
+        .rgb_b4_B14(rgb_b4_B14),
+        .mono_out(mono_pixel)
+    );
 
-    // 2024 04 27 ANDY'S LOG.  NOTHING WORKS.
-    // I can't seem to get any data from HDMI in, out of P9
-    // other stuff does, but it looks like no data is coming from
-    // the HDMI.  Looking at traces on the board, I think it's giving
-    // data out the 40-pin wire, but maybe not showing up in the FPGA?
+    // --- Scaler ---
+    wire scaled_write_enable;
+    wire [$clog2(512)-1:0] scaled_write_x;
+    wire [$clog2(342)-1:0] scaled_write_y;
+    wire scaled_mono_pixel;
 
-    // assign P9 = 1'b0; // show when the display is active on the LED
-    assign P9 = T5;
-    
+    scaler #(
+        .INPUT_WIDTH(800),
+        .INPUT_HEIGHT(480),
+        .OUTPUT_WIDTH(512),
+        .OUTPUT_HEIGHT(342)
+    ) scaler_inst (
+        .clk(rgb_odck),
+        .reset(1'b0),
+        .enable_in(input_coord_valid),
+        .mono_pixel_in(mono_pixel),
+        .input_x(input_x),
+        .input_y(input_y),
+        .scaled_mono_pixel(scaled_mono_pixel),
+        .scaled_write_enable(scaled_write_enable),
+        .scaled_write_x(scaled_write_x),
+        .scaled_write_y(scaled_write_y)
+    );
+
+    // --- Framebuffer Write Logic ---
+    assign clka = rgb_odck; // Use HDMI pixel clock for framebuffer write
+    assign cea = scaled_write_enable; // Enable write when scaler outputs valid data
+    assign ada = (scaled_write_y * 512) + scaled_write_x; // Calculate 1D address from scaled X and Y
+    assign din = scaled_mono_pixel; // Write scaled monochrome pixel to framebuffer
+
+    // debugging
+    assign P9 = rgb_vsync;
 
 endmodule

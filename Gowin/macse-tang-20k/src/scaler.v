@@ -16,7 +16,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module scaler #(
     parameter INPUT_WIDTH   = 800,
-    parameter INPUT_HEIGHT  = 600,
+    parameter INPUT_HEIGHT  = 480,
     parameter OUTPUT_WIDTH  = 512,
     parameter OUTPUT_HEIGHT = 342
 ) (
