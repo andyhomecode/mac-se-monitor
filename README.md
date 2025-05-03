@@ -50,20 +50,15 @@ https://miro.com/app/board/uXjVI_tZUDw=/
 
 ## I/O Wiring
 
-mac_vsync = R8
-mac_hsync = T7
-video_out = P8 
-mac_pixel_clk = T6 (diagnostic)
-mac_active = P6 (diagnostic)
-Clock (input) = unused
-
-- GPIO wiring 
+```plaintext
+- GPIO wiring
     Active      P6  T6  mac_pixel_clock
     HSYNC       T7  R8  VSYNC
     VIDEO       P8  T8
                 T9  P9
                 gnd gnd
                 3v3 3v3
+
 
 - Mac J-12 Connector from Analog board to Digital board
     gnd         1   8   gnd
@@ -83,7 +78,7 @@ Note, the TFP-40p cable only works when upside down (electrical connections on t
     9 (32) = HSYNC
     8 (33) = VSYNC
     7 (34) = DISPLAY ENABLE
-
+```
 ## Development Stages
 
 - Got the Arduino setting the PLL working.
