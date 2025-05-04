@@ -39,6 +39,10 @@ module main(
     // couple of outputs for the o'scope
     //output reg T9,
     output P9
+
+    // couple of outputs for the o'scope
+    output J14,
+    output J16
 );
 
     // --- Clock Generation and Buffering for 15.xx MHz pixel clock ---
@@ -309,5 +313,11 @@ module main(
  
     // debugging
     assign P9 = input_y[3]; // Output for oscilloscope
+
+    
+    // debugging
+    assign J16 = rgb_de; // Output for oscilloscope Line 1
+    assign J14 = ada_address[9]; // Output for oscilloscope Line 2
+
 
 endmodule

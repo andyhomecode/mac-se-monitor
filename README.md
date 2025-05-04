@@ -80,6 +80,9 @@ Note, the TFP-40p cable only works when upside down (electrical connections on t
     7 (34) = DISPLAY ENABLE
 
 But, if I plug the flat cable into the FPGA upside-down (conductive side up) also, everything is back where it should be.
+
+Also, if the TTL RGB cable is connected, you cannot program to Flash, only SRAM (which is lost on power cycle).  Unhook to program.  And yes, it took me a long, long time to figure this out. 
+
 ```
 ## Development Stages
 
