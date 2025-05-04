@@ -103,13 +103,18 @@ But, if I plug the flat cable into the FPGA upside-down (conductive side up) als
 - fiddled with the front porch and other timings and got it looking good
 - Got the BSRAM initialized with the Mac Icon and hooked showing it (vibe coded a BMP -> initialization file formatter in python, bram_initializer.py)
 - 2025 05 03 Figured out why I couldn't read any data from the TFP401--the flat ribbon cable only makes electrical connection when upside down.  Pin 40 is now 1. 
+- 2025 05 03 IT IS ALIVE!!! Had to use Gemini Deep Research to figure out the proper timings for TTL RGB and was able to get scaled addresses to write into the buffer!!!  Now the problem is that the whole image is shifted 1/2 the screen to the right and wrapped around, has a top front porch that's pretty big and the bottom of the image is off the screen, and there's jitter in the bottom half of the image.  BUT IT IS ALIVE!!!
 
 ## TODO
 
-- TODO: Read in the HDMI data START NOW THAT I KNOW UPSIDE DOWN CABLE
-- TODO: Test the scaler NOT STARTED TESTING VIBE CODE
-- TODO: test the color_converter   NOT STARTED TESTING VIBE CODE
-- TODO: write the pixels into Port A of the framebuffer
+- TODO: Figure out why the image is shifted to the right.  Front porch timing?  
+- TODO: Figure out why it's shifted down from the top. Reading lines too early?
+- TODO: Figure out the jitter.  Timing conflicts between read & write?
+- TODO: Tone down the brightness cutoff so it's not totally washed out.
+further down
+- TODO: 3D print a holder board to mount the board inside the Mac
+- TODO: Wire up 5-v power to the HDMI board or 12v to the FPGA (probably FPGA) to the Mac power supply
+- TODO: put HDMI connector through back or front of Mac using extension.
 
 
 ### Software/Tools

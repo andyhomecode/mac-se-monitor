@@ -220,7 +220,10 @@ module main(
 
     end
 
-    assign mono_pixel = rgb_r3_N7 | rgb_r4_N6 | rgb_g3_P7 | rgb_g4_R7 | rgb_g5_D10 | rgb_b3_A14 | rgb_b4_B14;
+    // make mono by looking at the MSBs of the different colors
+    // was too bright.
+    // assign mono_pixel = rgb_r3_N7 | rgb_r4_N6 | rgb_g3_P7 | rgb_g4_R7 | rgb_g5_D10 | rgb_b3_A14 | rgb_b4_B14;
+    assign mono_pixel = rgb_r4_N6 | rgb_g4_R7 | rgb_g5_D10 | rgb_b4_B14;
 
    
     
