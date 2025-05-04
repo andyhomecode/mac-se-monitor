@@ -38,7 +38,7 @@ module main(
 
     // couple of outputs for the o'scope
     //output reg T9,
-    output P9
+    output P9,
 
     // couple of outputs for the o'scope
     output J14,
