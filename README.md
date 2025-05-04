@@ -79,11 +79,19 @@ Note, the TFP-40p cable only works when upside down (electrical connections on t
     8 (33) = VSYNC
     7 (34) = DISPLAY ENABLE
 
-But, if I plug the flat cable into the FPGA upside-down (conductive side up) also, everything is back where it should be.
+But, if I plug the flat cable into the FPGA upside-down (conductive side up)
+also, everything is back where it should be.
 
-Also, if the TTL RGB cable is connected, you cannot program to Flash, only SRAM (which is lost on power cycle).  Unhook to program.  And yes, it took me a long, long time to figure this out. 
+Also, if the TTL RGB cable is connected, you cannot program to Flash,
+only SRAM (which is lost on power cycle).  Unhook to program.  And yes, 
+it took me a long, long time to figure this out. 
 
 ```
+## Where is the meat of the code?
+
+- [Gowin/macse-tang-20k/source/](Gowin/macse-tang-20k/source/)
+- [Gowin/macse-tang-20k/source/main.v](Gowin/macse-tang-20k/source/main.v) does the heavy lifting
+
 ## Development Stages
 
 - Got the Arduino setting the PLL working.
@@ -107,12 +115,11 @@ Also, if the TTL RGB cable is connected, you cannot program to Flash, only SRAM 
 - Got the BSRAM initialized with the Mac Icon and hooked showing it (vibe coded a BMP -> initialization file formatter in python, bram_initializer.py)
 - 2025 05 03 Figured out why I couldn't read any data from the TFP401--the flat ribbon cable only makes electrical connection when upside down.  Pin 40 is now 1. 
 - 2025 05 03 IT IS ALIVE!!! Had to use Gemini Deep Research to figure out the proper timings for TTL RGB and was able to get scaled addresses to write into the buffer!!!  Now the problem is that the whole image is shifted 1/2 the screen to the right and wrapped around, has a top front porch that's pretty big and the bottom of the image is off the screen, and there's jitter in the bottom half of the image.  BUT IT IS ALIVE!!!
+- 2025 05 04 IT WORKS!!!  By adding a buffer between reading the incoming HDMI->TTL RGB stream and the framebuffer, it seems to have fixed some timing problems. DE HSYNC VSYNC and DATA were all exactly right on the incoming lines, now that I'm grabbing it all at once, it's writing the right data to the framebuffer.  No jitter. No shifting from a delay 
 
 ## TODO
 
-- TODO: Figure out why the image is shifted to the right.  Front porch timing?  
 - TODO: Figure out why it's shifted down from the top. Reading lines too early?
-- TODO: Figure out the jitter.  Timing conflicts between read & write?
 - TODO: Tone down the brightness cutoff so it's not totally washed out.
 further down
 - TODO: 3D print a holder board to mount the board inside the Mac
