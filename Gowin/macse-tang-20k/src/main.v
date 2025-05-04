@@ -126,80 +126,185 @@ module main(
     // whenever the clock goes low, get the current pixel out of the framebuffer
     // and send it right out of the board i/o to make a beautiful picture
     always @(posedge fifteen_clk) begin
-        video_out <= dout; // Use the framebuffer data
+        video_out <= !(mac_active & dout); // Use AND condition for video_out
     end
 
     /////////////////////////////
     /////// HDMI DECODER SECTION //////////
     /////////////////////////////
+    ////  start of GEMINI
 
-    // --- Input Coordinate Generator ---
-    wire [$clog2(800)-1:0] input_x; // Input X coordinate
-    wire [$clog2(480)-1:0] input_y; // Input Y coordinate
-    wire input_coord_valid;
+        // --- Corrected Input Coordinate Generator ---
+    // Assumes standard video timing: DE high for active pixels,
+    // HSync/VSync pulses occur during blanking (DE low).
+    // Assumes HSync and VSync are active-low pulses (adjust if needed).
 
-    input_coordinate_generator #(
-        .H_ACTIVE(800),
-        .V_ACTIVE(480)
-    ) input_coord_gen (
-        .clk(rgb_odck),
-        .reset(1'b0),
-        .hs(rgb_hsync),
-        .vs(rgb_vsync),
-        .de(rgb_de),
-        .valid_out(input_coord_valid),
-        .x_out(input_x),
-        .y_out(input_y)
-    );
+    // Define active display dimensions (adjust if necessary based on source)
+    localparam H_ACTIVE = 800; // Horizontal active pixels
+    localparam V_ACTIVE = 480; // Vertical active lines
 
-    // --- Color Converter ---
-    wire mono_pixel;
+    // Registers for coordinates and valid signal
+    // Use $clog2 to automatically size registers based on active dimensions
+    reg [$clog2(800)-1:0] input_x; // Input X coordinate
+    reg [$clog2(480)-1:0] input_y; // Input Y coordinate
+    reg input_coord_valid;             // Valid signal for input coordinates
 
-    color_converter color_conv (
-        .clk(rgb_odck),
-        .reset(1'b0),
-        .enable(input_coord_valid),
-        .rgb_r3_N7(rgb_r3_N7),
-        .rgb_r4_N6(rgb_r4_N6),
-        .rgb_g3_P7(rgb_g3_P7),
-        .rgb_g4_R7(rgb_g4_R7),
-        .rgb_g5_D10(rgb_g5_D10),
-        .rgb_b3_A14(rgb_b3_A14),
-        .rgb_b4_B14(rgb_b4_B14),
-        .mono_out(mono_pixel)
-    );
+    wire mono_pixel; // Monochrome pixel from RGB input
 
-    // --- Scaler ---
-    wire scaled_write_enable;
-    wire [$clog2(512)-1:0] scaled_write_x;
-    wire [$clog2(342)-1:0] scaled_write_y;
-    wire scaled_mono_pixel;
+    reg [$clog2(512)-1:0]  scaled_write_x; // Output: Target X coord in buffer
+    reg [$clog2(342)-1:0] scaled_write_y;
+    reg [17:0] ada_address;
+    
+    localparam X_SCALE_FACTOR = 480 / 342;
+    localparam Y_SCALE_FACTOR = 800 / 512;
 
-    scaler #(
-        .INPUT_WIDTH(800),
-        .INPUT_HEIGHT(480),
-        .OUTPUT_WIDTH(512),
-        .OUTPUT_HEIGHT(342)
-    ) scaler_inst (
-        .clk(rgb_odck),
-        .reset(1'b0),
-        .enable_in(input_coord_valid),
-        .mono_pixel_in(mono_pixel),
-        .input_x(input_x),
-        .input_y(input_y),
-        .scaled_mono_pixel(scaled_mono_pixel),
-        .scaled_write_enable(scaled_write_enable),
-        .scaled_write_x(scaled_write_x),
-        .scaled_write_y(scaled_write_y)
-    );
 
-    // --- Framebuffer Write Logic ---
+    // Registers to store the previous state of sync/DE signals for edge detection
+    reg rgb_hsync_prev;
+    reg rgb_vsync_prev;
+    reg rgb_de_prev;
+
+    // Wires to detect relevant signal edges during blanking intervals
+    // Detect the falling edge of HSync (start of sync pulse) when DE is low
+    wire hsync_falling_edge_in_blanking = (rgb_hsync_prev == 1'b1 && rgb_hsync == 1'b0 && rgb_de == 1'b0);
+    // Detect the falling edge of VSync (start of sync pulse) when DE is low
+    wire vsync_falling_edge_in_blanking = (rgb_vsync_prev == 1'b1 && rgb_vsync == 1'b0 && rgb_de == 1'b0);
+    // Note: The specific edge (rising/falling) and polarity (active-high/low)
+    // might need adjustment based on the exact TFP401 configuration and
+    // the video standard being received. This example assumes active-low syncs.
+
+    // Main logic clocked by the pixel clock
+    always @(posedge rgb_odck) begin
+        // Latch the current state of signals for next cycle's edge detection
+        rgb_hsync_prev <= rgb_hsync;
+        rgb_vsync_prev <= rgb_vsync;
+        rgb_de_prev    <= rgb_de;
+
+        // --- Horizontal Counter (input_x) ---
+        if (rgb_de) begin
+            // Check if Data Enable just went high (start of active line)
+            if (rgb_de_prev == 1'b0) begin
+                input_x <= 0; // Reset X coordinate at the start of active line
+            // Check if X is within the active horizontal range before incrementing
+            end else if (input_x < H_ACTIVE - 1) begin
+                input_x <= input_x + 1; // Increment X during active display
+            end
+            // If input_x reaches H_ACTIVE-1, it holds that value until DE goes low.
+        end
+        // input_x does not change when rgb_de is low in this implementation.
+
+        // --- Vertical Counter (input_y) ---
+        // Check for VSync pulse start during vertical blanking
+        if (vsync_falling_edge_in_blanking) begin
+            input_y <= 0; // Reset Y coordinate for the start of a new frame
+        // Check for HSync pulse start during horizontal blanking
+        // This signals the end of a line, so increment Y for the next line.
+        end else if (hsync_falling_edge_in_blanking) begin
+            // Check if Y is within the active vertical range before incrementing
+            if (input_y < V_ACTIVE - 1) begin
+                input_y <= input_y + 1; // Increment Y for the next line
+            end
+            // If input_y reaches V_ACTIVE-1, it holds that value until VSync resets it.
+        end
+
+        // --- Coordinate Valid Signal ---
+        // The input coordinate is valid only when Data Enable is active (high)
+        input_coord_valid <= rgb_de;
+
+        if (input_coord_valid) begin
+            scaled_write_x <= input_x / X_SCALE_FACTOR;
+            scaled_write_y <= input_y / Y_SCALE_FACTOR;
+            ada_address <= (scaled_write_y * 512) + scaled_write_x;
+        end
+
+
+    end
+
+    assign mono_pixel = rgb_r3_N7 | rgb_r4_N6 | rgb_g3_P7 | rgb_g4_R7 | rgb_g5_D10 | rgb_b3_A14 | rgb_b4_B14;
+
+   
+    
+    //////  END OF GEMINI 
+/* 
+    // --- Missing Signal Declarations ---
+    reg [$clog2(800)-1:0] input_x; // Input X coordinate
+    reg [$clog2(480)-1:0] input_y; // Input Y coordinate
+    reg input_coord_valid;         // Valid signal for input coordinates
+    reg mono_pixel;                // Monochrome pixel value
+    reg [8:0] scaled_write_x;      // Scaled X coordinate
+    reg [8:0] scaled_write_y;      // Scaled Y coordinate
+    reg scaled_mono_pixel;         // Scaled monochrome pixel value
+    reg scaled_write_enable;       // Write enable for scaled data
+    wire [17:0] test_ada;           // Address for framebuffer write
+    reg test_cea;                  // Chip enable for framebuffer write
+    reg test_din;                  // Data input for framebuffer write
+    reg [17:0] ada_address;        // Counter for address lookup
+
+    // --- Combined Logic for Scaler and Framebuffer Write ---
+    always @(posedge rgb_odck) begin
+        // --- Input Coordinate Generator ---
+        if (rgb_de) begin
+            if (rgb_hsync) begin
+                input_x <= 0;
+            end else begin
+                input_x <= input_x + 1;
+            end
+
+            if (rgb_vsync) begin
+                input_y <= 0;
+            end else if (rgb_hsync) begin
+                input_y <= input_y + 1;
+            end
+
+            input_coord_valid <= 1'b1;
+        end else begin
+            input_coord_valid <= 1'b0;
+        end
+
+        // --- Address Counter ---
+        if (rgb_de) begin
+            if (rgb_hsync && rgb_vsync) begin
+                ada_counter <= 0; // Reset counter at the start of a new frame
+            end else begin
+                ada_counter <= ada_counter + 1; // Increment counter for each pixel
+            end
+        end
+
+        // --- Color Converter ---
+        if (rgb_de) begin
+            // Perform a big OR to check if any input value is 1
+            mono_pixel <= rgb_r3_N7 | rgb_r4_N6 | rgb_g3_P7 | rgb_g4_R7 | rgb_g5_D10 | rgb_b3_A14 | rgb_b4_B14;
+        end else begin
+            mono_pixel <= 1'b0; // Output Black during blanking intervals
+        end
+
+        // --- Scaler Logic ---
+        if (input_coord_valid) begin
+            // Pass through the monochrome pixel value
+            scaled_mono_pixel <= mono_pixel;
+
+            // Enable write when input is valid
+            scaled_write_enable <= 1'b1;
+        end else begin
+            scaled_write_enable <= 1'b0;
+        end
+
+        // --- Framebuffer Write Logic ---
+        if (scaled_write_enable) begin
+            test_cea <= 1'b1; // Enable write
+            test_din <= scaled_mono_pixel; // Write scaled monochrome pixel
+        end else begin
+            test_cea <= 1'b0; // Disable write
+        end
+    end */
+
+   // Assign ada using the ada_counter
     assign clka = rgb_odck; // Use HDMI pixel clock for framebuffer write
-    assign cea = scaled_write_enable; // Enable write when scaler outputs valid data
-    assign ada = (scaled_write_y * 512) + scaled_write_x; // Calculate 1D address from scaled X and Y
-    assign din = scaled_mono_pixel; // Write scaled monochrome pixel to framebuffer
-
+    assign ada = ada_address; // Use the counter for address lookup
+    assign cea = input_coord_valid;
+    assign din = mono_pixel; 
+ 
     // debugging
-    assign P9 = rgb_vsync;
+    assign P9 = input_y[3]; // Output for oscilloscope
 
 endmodule

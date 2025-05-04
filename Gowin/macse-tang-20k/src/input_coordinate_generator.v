@@ -37,7 +37,9 @@ module input_coordinate_generator #(
             v_counter <= 0;
             valid_out <= 1'b0;
         end else begin
-            if (hs) begin
+            if (vs) begin
+                v_counter <= 0; // Reset vertical counter on VSync
+            end else if (hs) begin
                 h_counter <= 0; // Reset horizontal counter on HSync
                 if (v_counter < V_ACTIVE) begin
                     v_counter <= v_counter + 1; // Increment vertical counter

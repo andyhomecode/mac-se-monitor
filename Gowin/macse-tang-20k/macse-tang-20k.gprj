@@ -9,7 +9,6 @@
         <File path="src/gowin_osc/gowin_osc.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_rpll/gowin_rpll.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_sdpb/gowin_sdpb.v" type="file.verilog" enable="1"/>
-        <File path="src/hdmi_to_mac_se_converter.v" type="file.verilog" enable="1"/>
         <File path="src/input_coordinate_generator.v" type="file.verilog" enable="1"/>
         <File path="src/mac_se_timing_generator.v" type="file.verilog" enable="1"/>
         <File path="src/main.v" type="file.verilog" enable="1"/>

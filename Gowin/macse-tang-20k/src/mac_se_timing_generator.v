@@ -77,4 +77,8 @@ module mac_se_timing_generator (
         pixel <= pixel_counter; // Assign pixel counter to output
     end
 
+    assign mac_x_coord = h_count; 
+    assign mac_y_coord = v_count; 
+    assign mac_pixel = pixel_counter; 
+
 endmodule
