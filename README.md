@@ -1,6 +1,12 @@
 # Mac SE Modern Input Custom Video Card
 
-## update 2025 05 26 Displaying cute Mac icon from framebuffer! The uncharted world of outputting Mac SE video is behind us!
+## update 2025 05 4 
+
+It works! HDMI image is shown on the mac monitor!
+
+Problems are it doesn't scale right to the full height/depth of the screen.  Black bar above and below.
+
+Need to implement a gray scale dithering--hard black & white isn't usable. 
 
 ## Project Overview
 
@@ -19,12 +25,12 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ## Hardware Components
 
-- Macintosh SE (bad logic board)
-- HDMI Decoder: TFP401
-- FPGA: Tang Nano 20k (Gowin GW2A-18) on Project Dock board for nice pins and RGB connector
+- [Macintosh SE SuperDrive](https://en.wikipedia.org/wiki/Macintosh_SE) (bad logic board and beat up like [Gonk on tattoine](https://www.starwars.com/databank/gonk-droid))
+- HDMI Decoder: [TFP401 from Adafruit](https://www.adafruit.com/product/2219)
+- FPGA: [Tang Nano 20k (Gowin GW2A-18)](https://wiki.sipeed.com/hardware/en/tang/tang-primer-20k/primer-20k.html) on Project Dock board for nice pins and RGB connector
 - connector for J12 (power for circuit and VIDEO, HSYNC, VSYNC input)
 - panel mount HDMI connector
-- FPGA 3.3v should be fine as inputs on analogue board are buffered through 74LS38 Quad 2-input NAND (update, yes, 3.5v works fine!)
+- Note: FPGA 3.3v should be fine as inputs on analogue board which are 5v TTL, but they are buffered through 74LS38 Quad 2-input NAND (update, yes, 3.5v works fine!)
 
 ## Timing Diagram
 
@@ -37,11 +43,10 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 - Monochrome display
 
 ### Key Modules
-1. **Input Coordinate Generator**: Generates pixel coordinates from HDMI input signals (HSync, VSync, Data Enable). TODO
-2. **Color Converter**: Converts 24-bit RGB input to 1-bit monochrome using a simple thresholding method. TODO
-3. **Scaler**: Performs nearest-neighbor scaling from 800x600 to 512x342 resolution. TODO
-4. **Frame Buffer**: Stores scaled monochrome pixel data for synchronization with Mac SE timing.  DONE. It's 175104x1 to avoid having to do multiplication, but might need to change to match Mac's 512x342 to make writing easier.
-5. **Mac SE Timing Generator**: Generates horizontal and vertical sync signals, active display region, and pixel coordinates for the Mac SE monitor. DONE mac_se_timing_generator.v does all the heavy lifting.
+1. **main.v**: this does all the heavy lifting.
+2. **Frame Buffer**: Stores scaled monochrome pixel data for synchronization with Mac SE timing.  DONE. It's 175104x1 to avoid having to do multiplication, but might need to change to match Mac's 512x342 to make writing easier.  GOWIN IP generated
+3. **Mac SE Timing Generator**: Generates horizontal and vertical sync signals, active display region, and pixel coordinates for the Mac SE monitor. DONE mac_se_timing_generator.v does all the heavy lifting.
+4. **Clock**: makes the right frequency for the Mac.  GOWIN IP generated
 
 ![Block Diagram](miro-Mac-FPGA.jpg)
 

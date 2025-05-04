@@ -8,11 +8,23 @@ module main(
     output reg video_out, // Changed to reg for procedural assignment
 
     // TTL RGB in
-    input rgb_r3_N7, // most significant bits of Red, Green, Blue
+    input rgb_r0_L9, 
+    input rgb_r1_N8, 
+    // input rgb_r2_N9, // conflict, assigned to SSPI. Going to use 0 instead
+    input rgb_r3_N7, 
     input rgb_r4_N6,
+
+
+    input rgb_g0_D11,
+    input rgb_g1_A11,
+    input rgb_g2_B11,
     input rgb_g3_P7,
     input rgb_g4_R7,
     input rgb_g5_D10, // I don't know why Green has 6 bits and the others just get 5
+    
+    input rgb_b0_B12,
+    input rgb_b1_C12,
+    input rgb_b2_B13,
     input rgb_b3_A14,
     input rgb_b4_B14,
 
@@ -35,10 +47,6 @@ module main(
     output reg LED4_L14, 
     output reg LED3_N14,  
     output reg LED2_N16,
-
-    // couple of outputs for the o'scope
-    //output reg T9,
-    output P9,
 
     // couple of outputs for the o'scope
     output J14,
@@ -167,9 +175,29 @@ module main(
     reg rgb_hsync_prev;
     reg rgb_vsync_prev;
     reg rgb_de_prev;
+    reg mono_pixel; // Monochrome pixel output (1 bit)
 
-    // Color Conversion Register
-    reg mono_pixel;
+    // Color Conversion Wires (faster than registers in an ALWAYS)
+    wire [7:0] red, green, blue;
+    assign red[0]   = rgb_r0_L9; // 1 bit
+    assign red[1]   = rgb_r1_N8; // 1 bit
+    assign red[2]   = 1'b0; // 0 bit (unused)
+    assign red[3]   = rgb_r3_N7; // 1 bit
+    assign red[4]   = rgb_r4_N6; // 1 bit
+    assign green[0] = rgb_g0_D11; // 1 bit
+    assign green[1] = rgb_g1_A11; // 1 bit
+    assign green[2] = rgb_g2_B11; // 1 bit
+    assign green[3] = rgb_g3_P7; // 1 bit
+    assign green[4] = rgb_g4_R7; // 1 bit
+    assign green[5] = rgb_g5_D10; // 1 bit
+    assign blue[0]  = rgb_b0_B12; // 1 bit
+    assign blue[1]  = rgb_b1_C12; // 1 bit
+    assign blue[2]  = rgb_b2_B13; // 1 bit
+    assign blue[3]  = rgb_b3_A14; // 1 bit
+    assign blue[4]  = rgb_b4_B14; // 1 bit
+
+    // Sum the RGB wires
+    wire [8:0] rgb_sum = red + green + blue;
 
     // Scaler Registers
     reg [8:0] scaled_write_x; // Scaled X coordinate (9 bits for H_SCALED)
@@ -226,7 +254,8 @@ module main(
 
         // --- Color Converter ---
         if (input_coord_valid) begin
-            mono_pixel <= rgb_r3_N7 | rgb_r4_N6 | rgb_g3_P7 | rgb_g4_R7 | rgb_g5_D10 | rgb_b3_A14 | rgb_b4_B14; // Example OR
+            // Compare the OR of all to a threshold
+            mono_pixel <= (rgb_sum > 8'd60) ? 1'b1 : 1'b0;
         end else begin
             mono_pixel <= 1'b0;
         end
@@ -275,7 +304,7 @@ module main(
     
     // debugging
     assign J16 = rgb_de; // Output for oscilloscope Line 1
-    assign J14 = bram_addr_reg[9]; // Output for oscilloscope Line 2
+    assign J14 = mono_pixel; // Output for oscilloscope Line 2
 
 
 endmodule
