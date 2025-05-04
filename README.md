@@ -89,8 +89,8 @@ it took me a long, long time to figure this out.
 ```
 ## Where is the meat of the code?
 
-- [Gowin/macse-tang-20k/source/](Gowin/macse-tang-20k/source/)
-- [Gowin/macse-tang-20k/source/main.v](Gowin/macse-tang-20k/source/main.v) does the heavy lifting
+- [Gowin/macse-tang-20k/src/](Gowin/macse-tang-20k/src/)
+- [Gowin/macse-tang-20k/src/main.v](Gowin/macse-tang-20k/src/main.v) does the heavy lifting
 
 ## Development Stages
 
