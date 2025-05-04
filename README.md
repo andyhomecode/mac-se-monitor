@@ -4,9 +4,13 @@
 
 It works! HDMI image is shown on the mac monitor!
 
-Problems are it doesn't scale right to the full height/depth of the screen.  Black bar above and below.
+Problems are it doesn't scale right to the full height/depth of the screen.  Black bar above and below. Need to implement a gray scale dithering--hard black & white isn't usable.
 
-Need to implement a gray scale dithering--hard black & white isn't usable. 
+PROBLEM: Pin R9 on the FPGA is used by the TTL RGB cable connector for rgb_odck (dot clock) and onboard is FASTRD_N, which is used to communicate with the External Flash memory used to "boot" the FPGA.  The HDMI device is sending the dotclck down and messes up reads on boot, so the FPGA won't configure itself.  
+
+TODO: Use the breakout boards to move the dot clock to someplace else harmless, like one of the lesser color bits, and map it in the FPGA.
+
+Maaaybe I can toggle dual-use on?  That might do something?
 
 ## Project Overview
 
