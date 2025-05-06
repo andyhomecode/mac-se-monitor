@@ -10,6 +10,9 @@ PROBLEM: Pin R9 on the FPGA is used by the TTL RGB cable connector for rgb_odck 
 
 TODO: Use the breakout boards to move the dot clock to someplace else harmless, like one of the lesser color bits, and map it in the FPGA.
 
+pin 30 (or Pin 11 upside down) is the problem.
+
+
 Maaaybe I can toggle dual-use on?  That might do something?
 
 ## Project Overview
@@ -83,10 +86,55 @@ Note, the TFP-40p cable only works when upside down (electrical connections on t
 
     12 (29) = gnd
     11 (30) = Pixel Clock
-    10 (31) = Active
+    10 (31) = Active (high when getting HDMI, low when unplugged)
     9 (32) = HSYNC
     8 (33) = VSYNC
     7 (34) = DISPLAY ENABLE
+
+Full cable specs:
+https://hackaday.com/2024/01/25/displays-we-love-hacking-parallel-rgb/ 
+
+Regular Upside Down	Description
+1	    40	         1  VLED- LED Cathode
+2	    39	         2  VLED+ LED Anode
+3	    38	         3  GND Ground
+4	    37	         4  VDD Power Supply (this seems to power the TFP401 board)
+5	    36	         R0  LSB
+6	    35	         R1
+7	    34	         R2
+8	    33	         R3
+9	    32	         R4
+10	    31	         R5
+11	    30	         R6
+12	    29	         R7  MSB
+13	    28	         G0
+14	    27	         G1
+15	    26	         G2
+16	    25	         G3
+17	    24	         G4
+18	    23	         G5
+19	    22	         G6
+20	    21	         G7
+21	    20	         B0
+22	    19	         B1
+23	    18	         B2
+24	    17	         B3
+25	    16	         B4
+26	    15	         B5
+27	    14	         B6
+28	    13	         B7
+29	    12	         Gnd
+30	    11	         Pixel Clock
+31	    10	         Active (high when HDMI plugged in to computer)
+32	    9	         HSYNC
+33	    8	         VSYNC
+34	    7	         DISPEN
+35	    6	         35 NC NC
+36	    5	         36 GND Ground
+37	    4	         37 XR/INT Resistive touch panel  
+38	    3	         38 YD/RST Resistive touch panel 
+39	    2	         39 XL/SCL Resistive touch panel 
+40	    1	         40 YU/SDA Resistive touch panel 
 
 But, if I plug the flat cable into the FPGA upside-down (conductive side up)
 also, everything is back where it should be.
