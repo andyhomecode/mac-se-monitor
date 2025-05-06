@@ -82,7 +82,9 @@ https://miro.com/app/board/uXjVI_tZUDw=/
     nc          7   14  +12v (probably will use this to power project)
 
 - TFP401
-Note, the TFP-40p cable only works when upside down (electrical connections on top, not bottom), so all connections are x = x - 41 (40=1, 39=2, etc.)
+Note, the TFP-40p cable only works when upside down
+(electrical connections on top, not bottom), 
+so all connections are x = x - 41 (40=1, 39=2, etc.)
 
     12 (29) = gnd
     11 (30) = Pixel Clock
@@ -184,6 +186,7 @@ further down
 - TODO: 3D print a holder board to mount the board inside the Mac
 - TODO: Wire up 5-v power to the HDMI board or 12v to the FPGA (probably FPGA) to the Mac power supply
 - TODO: put HDMI connector through back or front of Mac using extension.
+- TODO: add a ROM of the Mac logo (maybe with QR?) and show that when ACTIVE low (no HDMI)
 
 
 ### Software/Tools
