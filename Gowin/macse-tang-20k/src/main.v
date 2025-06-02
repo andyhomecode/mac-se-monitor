@@ -1,5 +1,7 @@
+// 2025 06 01 version
+
 module main(
-    // input  Clock,
+
 
     output mac_hsync,
     output mac_vsync,
@@ -8,30 +10,38 @@ module main(
     output reg video_out, // Changed to reg for procedural assignment
 
     // TTL RGB in
-    input rgb_r0_L9, 
-    input rgb_r1_N8, 
-    // input rgb_r2_N9, // conflict, assigned to SSPI. Going to use 0 instead
-    input rgb_r3_N7, 
-    input rgb_r4_N6,
+    // 2025 06 01 remapped entirely 
+    input rgb_r0_E15, 
+    input rgb_r1_D14, 
+    //input rgb_r2_A15, // using for HSYNC because N9 is dedicated to SSPI
+    input rgb_r3_B14, 
+    input rgb_r4_A14,
 
 
-    input rgb_g0_D11,
-    input rgb_g1_A11,
-    input rgb_g2_B11,
-    input rgb_g3_P7,
+    input rgb_g0_B13,
+    input rgb_g1_C12,
+    input rgb_g2_B12,
+    input rgb_g3_D10,
     input rgb_g4_R7,
-    input rgb_g5_D10, // I don't know why Green has 6 bits and the others just get 5
+    // I don't know why Green has 6 bits and the others just get 5, 
+    // but I'm dropping it anyway
+    // needed the extra pin because I had to move 
+    // Pixel Clock off of R9 because it overlapped with SSPI loading
+    // // input rgb_g5_D10, 
     
-    input rgb_b0_B12,
-    input rgb_b1_C12,
-    input rgb_b2_B13,
-    input rgb_b3_A14,
-    input rgb_b4_B14,
+    input rgb_b0_P7,
+    input rgb_b1_B11,
+    input rgb_b2_A11,
+    input rgb_b3_D11,
+    input rgb_b4_N6,
 
-    input rgb_odck, // R9 PIXCLK
-    input rgb_hsync, // A15
-    input rgb_vsync,  // D15
-    input rgb_de,  // E15 DISPEN on the Adafruit board schematic
+    input rgb_odck, // PIXCLK
+    input rgb_hsync, // Goes to A15
+    input rgb_vsync,  // 
+    input rgb_de,  // DISPEN on the Adafruit board schematic
+
+    // TODO: Map Active to an input so I can know if there is HDMI or not
+    // TODO: Show the Mac Icon if no HDMI video
 
     // input rgb_bl, // Backlight control, not used
     // input tp_* // for the Touch Screen, Mac SE doesn't have one.
@@ -179,22 +189,22 @@ module main(
 
     // Color Conversion Wires (faster than registers in an ALWAYS)
     wire [7:0] red, green, blue;
-    assign red[0]   = rgb_r0_L9; // 1 bit
-    assign red[1]   = rgb_r1_N8; // 1 bit
-    assign red[2]   = 1'b0; // 0 bit (unused)
-    assign red[3]   = rgb_r3_N7; // 1 bit
-    assign red[4]   = rgb_r4_N6; // 1 bit
-    assign green[0] = rgb_g0_D11; // 1 bit
-    assign green[1] = rgb_g1_A11; // 1 bit
-    assign green[2] = rgb_g2_B11; // 1 bit
-    assign green[3] = rgb_g3_P7; // 1 bit
-    assign green[4] = rgb_g4_R7; // 1 bit
-    assign green[5] = rgb_g5_D10; // 1 bit
-    assign blue[0]  = rgb_b0_B12; // 1 bit
-    assign blue[1]  = rgb_b1_C12; // 1 bit
-    assign blue[2]  = rgb_b2_B13; // 1 bit
-    assign blue[3]  = rgb_b3_A14; // 1 bit
-    assign blue[4]  = rgb_b4_B14; // 1 bit
+    assign red[0]   = rgb_r0_E15; 
+    assign red[1]   = rgb_r1_D14; 
+    assign red[2]   = 1'b0; // 0 bit (unused, but don't remember why)
+    assign red[3]   = rgb_r3_B14; 
+    assign red[4]   = rgb_r4_A14; 
+    assign green[0] = rgb_g0_B13; 
+    assign green[1] = rgb_g1_C12; 
+    assign green[2] = rgb_g2_B12; 
+    assign green[3] = rgb_g3_D10; 
+    assign green[4] = rgb_g4_R7; 
+    // assign green[5] = rgb_g5_D10; // not loading this bit
+    assign blue[0]  = rgb_b0_P7; 
+    assign blue[1]  = rgb_b1_B11; 
+    assign blue[2]  = rgb_b2_A11; 
+    assign blue[3]  = rgb_b3_D11; 
+    assign blue[4]  = rgb_b4_N6; 
 
     // Sum the RGB wires
     wire [8:0] rgb_sum = red + green + blue;

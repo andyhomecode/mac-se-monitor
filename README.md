@@ -12,8 +12,12 @@ TODO: Use the breakout boards to move the dot clock to someplace else harmless, 
 
 pin 30 (or Pin 11 upside down) is the problem.
 
+2025 06 01 
 
-Maaaybe I can toggle dual-use on?  That might do something?
+![3D printed a baseplate to hold the boards](baseplate\mac-se-plate-with-holes.stl).
+
+Added two FPC-40 breakout boards to resolve the
+FASTRD_N / HDMI Clock conflict.
 
 ## Project Overview
 
@@ -126,7 +130,7 @@ Regular Upside Down	Description
 27	    14	         B6
 28	    13	         B7
 29	    12	         Gnd
-30	    11	         Pixel Clock
+30	    11	         Pixel Clock (PIN OVERLAPS FAST)
 31	    10	         Active (high when HDMI plugged in to computer)
 32	    9	         HSYNC
 33	    8	         VSYNC
