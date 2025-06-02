@@ -12,12 +12,24 @@ TODO: Use the breakout boards to move the dot clock to someplace else harmless, 
 
 pin 30 (or Pin 11 upside down) is the problem.
 
+
 2025 06 01 
 
 ![3D printed a baseplate to hold the boards](baseplate\mac-se-plate-with-holes.stl).
 
 Added two FPC-40 breakout boards to resolve the
 FASTRD_N / HDMI Clock conflict.
+
+Also, apparently N9 is used for SSPI?  Had to move HSYNC to A15
+
+Tried to wire everything up according to this spreadsheet:
+https://docs.google.com/spreadsheets/d/1DQ0Bn34Bpvun2SG3j3DgHXgf2LKgcCpmRKTwamXn-GM/edit?usp=sharing
+
+But that didn't work.  Either I miswired something or I got my logic wrong.
+Either way, it's time for bed.
+
+Good news is the Mac Video ouput of the test pattern still works and it boots up on its own now that the HDMI RGB input isn't blocking the FASTRD_N.
+
 
 ## Project Overview
 
