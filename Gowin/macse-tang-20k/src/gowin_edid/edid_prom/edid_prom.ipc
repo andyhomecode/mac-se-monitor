@@ -1,0 +1,13 @@
+[General]
+ipc_version=4
+file=edid_prom
+module=EDID_PROM_Top
+target_device=gw2a18c-011
+type=edid_prom
+version=1.0
+
+[Config]
+LANG=0
+Memory_Ini_File=C:\\Users\\andy\\Dropbox\\Mac SE Monitor\\Gowin\\macse-tang-20k\\src\\edid_800x600.mi
+Memory_Type=ROM
+Synthesis_tool=GowinSynthesis
