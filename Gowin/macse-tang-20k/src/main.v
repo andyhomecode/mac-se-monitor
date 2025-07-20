@@ -60,8 +60,14 @@ module main(
     output HDMI_ACTIVE_LED2_N16, // for incoming HDMI active
 
     // couple of outputs for the o'scope
-    output J14,
-    output J16
+    output oscope_T11,
+    output oscope_P11,
+    output oscope_T12,
+    output oscope_R11,
+    output oscope_M14,
+    output oscope_M15,
+    output oscope_J14,
+    output oscope_J16
 );
 
     // --- Clock Generation and Buffering for 15.xx MHz pixel clock ---
@@ -168,9 +174,9 @@ module main(
     localparam V_ACTIVE = 480;
 
     // Define scaled output dimensions
-    localparam H_SCALED = 512;
-    localparam V_SCALED = 342;
-    localparam BRAM_ADDR_WIDTH = $clog2(H_SCALED * V_SCALED); // 18 bits for 512x342
+    localparam H_CROP = 512;
+    localparam V_CROP = 342;
+    localparam BRAM_ADDR_WIDTH = $clog2(H_CROP * V_CROP); // 18 bits for 512x342
 
     // --- Input Signal Declarations (Example) ---
     // wire rgb_odck;
@@ -187,6 +193,7 @@ module main(
     reg rgb_vsync_prev;
     reg rgb_de_prev;
     reg mono_pixel; // Monochrome pixel output (1 bit)
+    reg input_y_debug; 
 
     // changing from a bunch of lines of RGB to just the most significant bits
     // // Color Conversion Wires (faster than registers in an ALWAYS)
@@ -211,11 +218,11 @@ module main(
     // Sum the RGB wires
     // wire [8:0] rgb_sum = red + green + blue;
 
-    // Scaler Registers
-    reg [8:0] scaled_write_x; // Scaled X coordinate (9 bits for H_SCALED)
-    reg [8:0] scaled_write_y; // Scaled Y coordinate (9 bits for V_SCALED)
-    reg scaled_mono_pixel;
-    reg scaled_write_enable;
+    // Remove scaler registers, use input_x/input_y directly
+    // reg [8:0] scaled_write_x; // Scaled X coordinate (remove)
+    // reg [8:0] scaled_write_y; // Scaled Y coordinate (remove)
+    // reg scaled_mono_pixel;    // (remove)
+    // reg scaled_write_enable;  // (remove)
 
     // *** BRAM Interface Registers (KEEP THESE) ***
     reg [17:0] bram_addr_reg; // BRAM address register (18 bits for 512x342)
@@ -230,7 +237,7 @@ module main(
     wire de_rising_edge   = (rgb_de_prev == 1'b0 && rgb_de == 1'b1);
 
     // Combinatorial calculation for next BRAM address
-    wire [17:0] next_bram_addr = (scaled_write_y * H_SCALED) + scaled_write_x;
+    wire [17:0] next_bram_addr = (input_y * H_CROP) + input_x;
 
     // --- Logic Implementation ---
 
@@ -254,10 +261,12 @@ module main(
         // Reset Y on VSync edge (detect during blanking)
         if (vsync_falling_edge &&!rgb_de) begin // Check DE is low
             input_y <= 0;
+            input_y_debug <= 0;
         // Increment Y on HSync edge (detect during blanking)
         end else if (hsync_falling_edge &&!rgb_de) begin // Check DE is low
             if (input_y < V_ACTIVE - 1) begin
                 input_y <= input_y + 1;
+                input_y_debug <= 1;
             end
         end
 
@@ -272,27 +281,16 @@ module main(
             mono_pixel <= 1'b0;
         end
 
-        // --- Scaler Logic ---
-        // (Consider pipelining multiply/divide if timing is an issue)
-        if (input_coord_valid) begin // Uses previous cycle's valid implicitly
-            scaled_write_x <= (input_x * H_SCALED) / H_ACTIVE;
-            scaled_write_y <= (input_y * V_SCALED) / V_ACTIVE;
-            scaled_mono_pixel <= mono_pixel;
-            scaled_write_enable <= 1'b1;
+        // --- Cropping Logic ---
+        // Only write to framebuffer if within cropped region
+        if (input_coord_valid && (input_x < H_CROP) && (input_y < V_CROP)) begin
+            bram_addr_reg <= (input_y * H_CROP) + input_x; // Crop: use input_x/y directly
+            bram_din_reg  <= mono_pixel;
+            bram_ena_reg  <= 1'b1;
+            bram_wea_reg  <= 1'b1;
         end else begin
-            scaled_write_enable <= 1'b0;
-        end
-
-        // --- Framebuffer Write Logic (Register BRAM Inputs) ---
-        // Uses values from the *previous* cycle (scaler outputs)
-        if (scaled_write_enable) begin
-            bram_addr_reg <= next_bram_addr;    // Register address
-            bram_din_reg  <= scaled_mono_pixel; // Register data
-            bram_ena_reg  <= 1'b1;             // Register Port Enable (asserted)
-            bram_wea_reg  <= 1'b1;             // Register Write Enable (asserted)
-        end else begin
-            bram_ena_reg  <= 1'b0;             // Register Port Enable (deasserted)
-            bram_wea_reg  <= 1'b0;             // Register Write Enable (deasserted)
+            bram_ena_reg  <= 1'b0;
+            bram_wea_reg  <= 1'b0;
         end
     end
 
@@ -304,10 +302,9 @@ module main(
     assign ada = bram_addr_reg; // Use registered address (assuming Port A)
     assign din = bram_din_reg;   // Use registered data (assuming Port A)
     assign cea = bram_ena_reg;    // Connect to Port A Enable (ENA)
-    //assign wea = bram_wea_reg;    // Connect to Port A Write Enable (WEA)
+    assign wea = bram_wea_reg;    // Connect to Port A Write Enable (WEA)
                                 // Adjust based on your BRAM's data width and primitive.
         
-    //////  END OF GEMINI 
 
 
     // debugging
@@ -329,12 +326,25 @@ module main(
             rgb_odck_blink <= ~rgb_odck_blink;
     end
 
-    assign RBG_CLOCK_LED3_N14 = rgb_odck_blink; // Blink LED3 on RGB clock activity
+    // assign RBG_CLOCK_LED3_N14 = rgb_odck_blink && ~rgb_active; // Blink LED3 on RGB clock activity
+    assign RBG_CLOCK_LED3_N14 = !(rgb_odck_blink && rgb_active); // Blink LED3 on RGB clock activity
 
 
-    // debugging
-    assign J16 = rgb_odck_blink; // Blinks if rgb_odck is running
-    assign J14 = rgb_de;         // Output for oscilloscope Line 2
+    // oscilloscope debugging block
+    assign oscope_P11 = rgb_odck; // <--- assign to signal of interest
+    assign oscope_T11 = rgb_de;   // <--- assign to signal of interest
+    
+    assign oscope_T12 = rgb_vsync; // <--- assign to signal of interest
+    assign oscope_R11 = rgb_hsync; // <--- assign to signal of interest
+    
+    // Temporary debug signals
+    wire [9:0] input_y_mult = input_y * V_SCALED;
+
+    // oscilloscope debugging block
+    assign oscope_M14 = rgb_hsync;
+    assign oscope_M15 = rgb_vsync;
+    assign oscope_J14 = rgb_hsync_prev;
+    assign oscope_J16 = rgb_vsync_prev;
 
 
 endmodule
