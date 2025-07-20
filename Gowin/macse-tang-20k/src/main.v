@@ -188,12 +188,12 @@ module main(
     // Simplified Coordinate Generation Registers
     reg [9:0] input_x; // Input X coordinate (10 bits for H_ACTIVE)
     reg [8:0] input_y; // Input Y coordinate (9 bits for V_ACTIVE)
-    reg input_coord_valid;             // Valid signal for input coordinates
+    reg input_coord_valid;
     reg rgb_hsync_prev;
     reg rgb_vsync_prev;
     reg rgb_de_prev;
-    reg mono_pixel; // Monochrome pixel output (1 bit)
-    reg input_y_debug; 
+    reg mono_pixel;
+    reg input_y_debug;
 
     // changing from a bunch of lines of RGB to just the most significant bits
     // // Color Conversion Wires (faster than registers in an ALWAYS)
@@ -235,11 +235,38 @@ module main(
     wire hsync_falling_edge = (rgb_hsync_prev == 1'b1 && rgb_hsync == 1'b0);
     wire vsync_falling_edge = (rgb_vsync_prev == 1'b1 && rgb_vsync == 1'b0);
     wire de_rising_edge   = (rgb_de_prev == 1'b0 && rgb_de == 1'b1);
+    wire de_falling_edge  = (rgb_de_prev == 1'b1 && rgb_de == 1'b0);
 
     // Combinatorial calculation for next BRAM address
     wire [17:0] next_bram_addr = (input_y * H_CROP) + input_x;
 
     // --- Logic Implementation ---
+
+    // --- Synchronize external video signals to rgb_odck domain ---
+    reg rgb_de_sync_0, rgb_de_sync_1;
+    reg rgb_hsync_sync_0, rgb_hsync_sync_1;
+    reg rgb_vsync_sync_0, rgb_vsync_sync_1;
+
+    always @(posedge rgb_odck) begin
+        rgb_de_sync_0    <= rgb_de;
+        rgb_de_sync_1    <= rgb_de_sync_0;
+        rgb_hsync_sync_0 <= rgb_hsync;
+        rgb_hsync_sync_1 <= rgb_hsync_sync_0;
+        rgb_vsync_sync_0 <= rgb_vsync;
+        rgb_vsync_sync_1 <= rgb_vsync_sync_0;
+    end
+
+    wire sync_rgb_de    = rgb_de_sync_1;
+    wire sync_rgb_hsync = rgb_hsync_sync_1;
+    wire sync_rgb_vsync = rgb_vsync_sync_1;
+
+    // Edge detectors for synchronized signals
+    reg sync_rgb_de_prev, sync_rgb_hsync_prev, sync_rgb_vsync_prev;
+    always @(posedge rgb_odck) begin
+        sync_rgb_de_prev    <= sync_rgb_de;
+        sync_rgb_hsync_prev <= sync_rgb_hsync;
+        sync_rgb_vsync_prev <= sync_rgb_vsync;
+    end
 
     always @(posedge rgb_odck) begin
         // --- Latch Previous States ---
@@ -247,23 +274,20 @@ module main(
         rgb_vsync_prev <= rgb_vsync;
         rgb_de_prev    <= rgb_de;
 
-        // --- Simplified Input Coordinate Generator ---
+        // --- Input Coordinate Generator for Cropping ---
+
         // Horizontal Counter (input_x)
-        if (rgb_de) begin // Only count during active horizontal display
-            if (de_rising_edge) begin // Reset X at start of active line
-                input_x <= 0;
-            end else if (input_x < H_ACTIVE - 1) begin
-                input_x <= input_x + 1; // Increment X during active display
-            end
+        if (de_rising_edge) begin
+            input_x <= 0;
+        end else if (sync_rgb_de) begin
+            input_x <= input_x + 1;
         end
 
         // Vertical Counter (input_y)
-        // Reset Y on VSync edge (detect during blanking)
-        if (vsync_falling_edge &&!rgb_de) begin // Check DE is low
+        if (vsync_falling_edge) begin
             input_y <= 0;
             input_y_debug <= 0;
-        // Increment Y on HSync edge (detect during blanking)
-        end else if (hsync_falling_edge &&!rgb_de) begin // Check DE is low
+        end else if (de_falling_edge) begin
             if (input_y < V_ACTIVE - 1) begin
                 input_y <= input_y + 1;
                 input_y_debug <= 1;
@@ -271,20 +295,18 @@ module main(
         end
 
         // Coordinate Valid Signal - simply follows DE in this version
-        input_coord_valid <= rgb_de;
+        input_coord_valid <= sync_rgb_de;
 
         // --- Color Converter ---
         if (input_coord_valid) begin
-            // Set mono_pixel high if any of R, G, or B are high
             mono_pixel <= rgb_r_B14 | rgb_g_A14 | rgb_b_b13;
         end else begin
             mono_pixel <= 1'b0;
         end
 
         // --- Cropping Logic ---
-        // Only write to framebuffer if within cropped region
         if (input_coord_valid && (input_x < H_CROP) && (input_y < V_CROP)) begin
-            bram_addr_reg <= (input_y * H_CROP) + input_x; // Crop: use input_x/y directly
+            bram_addr_reg <= (input_y * H_CROP) + input_x;
             bram_din_reg  <= mono_pixel;
             bram_ena_reg  <= 1'b1;
             bram_wea_reg  <= 1'b1;
@@ -331,20 +353,14 @@ module main(
 
 
     // oscilloscope debugging block
-    assign oscope_P11 = rgb_odck; // <--- assign to signal of interest
-    assign oscope_T11 = rgb_de;   // <--- assign to signal of interest
-    
-    assign oscope_T12 = rgb_vsync; // <--- assign to signal of interest
-    assign oscope_R11 = rgb_hsync; // <--- assign to signal of interest
-    
-    // Temporary debug signals
-    wire [9:0] input_y_mult = input_y * V_SCALED;
-
-    // oscilloscope debugging block
-    assign oscope_M14 = rgb_hsync;
-    assign oscope_M15 = rgb_vsync;
-    assign oscope_J14 = rgb_hsync_prev;
-    assign oscope_J16 = rgb_vsync_prev;
+    assign oscope_P11 = rgb_de;             // Show DE signal
+    assign oscope_T11 = input_x[0];         // Show input_x bit 0
+    assign oscope_T12 = input_x[1];         // Show input_x bit 1
+    assign oscope_R11 = input_y[0];         // Show input_y bit 0
+    assign oscope_M14 = input_y[1];         // Show input_y bit 1
+    assign oscope_M15 = rgb_de_prev;        // Show previous DE for edge debug
+    assign oscope_J14 = de_rising_edge;     // Show DE rising edge for debug
+    assign oscope_J16 = rgb_odck;           // Show pixel clock
 
 
 endmodule

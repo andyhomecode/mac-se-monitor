@@ -1,0 +1,14 @@
+-d E:\myWork\IP\releaseVerify\version\1.9.11\Gowin_DVI_RX_RefDesign\project\impl\gwsynthesis\dk_video.vg
+-p GW2A-18C-PBGA484-8
+-pn GW2A-LV18PG484C8/I7
+-cst E:\myWork\IP\releaseVerify\version\1.9.11\Gowin_DVI_RX_RefDesign\project\src\dk_video.cst
+-cfg E:\myWork\IP\releaseVerify\version\1.9.11\Gowin_DVI_RX_RefDesign\project\impl\pnr\device.cfg
+-sdc E:\myWork\IP\releaseVerify\version\1.9.11\Gowin_DVI_RX_RefDesign\project\src\dk_video.sdc
+-bit
+-tr
+-ph
+-timing
+-convert_sdp32_36_to_sdp16_18
+-correct_hold 1
+-route_maxfan 23
+-global_freq 100.000

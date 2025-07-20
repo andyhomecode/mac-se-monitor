@@ -1,0 +1,66 @@
+[
+ {
+  "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/video_top.v",
+  "InstLine" : 24,
+  "InstName" : "video_top",
+  "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/video_top.v",
+  "ModuleLine" : 24,
+  "ModuleName" : "video_top",
+  "SubInsts" : [
+   {
+    "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/video_top.v",
+    "InstLine" : 77,
+    "InstName" : "EDID_PROM_Top_inst",
+    "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/edid_prom/edid_prom.v",
+    "ModuleLine" : 745,
+    "ModuleName" : "EDID_PROM_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/edid_prom/edid_prom.v",
+      "InstLine" : 766,
+      "InstName" : "i2c_slave_wrapper_inst",
+      "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/edid_prom/edid_prom.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~i2c_slave_wrapper.EDID_PROM_Top"
+     }
+    ]
+   },
+   {
+    "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/video_top.v",
+    "InstLine" : 87,
+    "InstName" : "DVI_RX_Top_inst",
+    "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_rx/dvi_rx.v",
+    "ModuleLine" : 3674,
+    "ModuleName" : "DVI_RX_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_rx/dvi_rx.v",
+      "InstLine" : 3709,
+      "InstName" : "dvi2rgb_inst",
+      "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_rx/dvi_rx.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~dvi2rgb.DVI_RX_Top"
+     }
+    ]
+   },
+   {
+    "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/video_top.v",
+    "InstLine" : 108,
+    "InstName" : "DVI_TX_Top_inst",
+    "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_tx/dvi_tx.v",
+    "ModuleLine" : 1075,
+    "ModuleName" : "DVI_TX_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_tx/dvi_tx.v",
+      "InstLine" : 1104,
+      "InstName" : "rgb2dvi_inst",
+      "ModuleFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_tx/dvi_tx.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~rgb2dvi.DVI_TX_Top"
+     }
+    ]
+   }
+  ]
+ }
+]

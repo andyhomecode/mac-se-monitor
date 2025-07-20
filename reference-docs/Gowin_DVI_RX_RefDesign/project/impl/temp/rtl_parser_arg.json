@@ -1,0 +1,29 @@
+{
+ "Device" : "GW2A-18C",
+ "Files" : [
+  {
+   "Path" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_rx/dvi_rx.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/dvi_tx/dvi_tx.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/edid_prom/edid_prom.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/src/video_top.v",
+   "Type" : "verilog"
+  }
+ ],
+ "IncludePath" : [
+  "src/dvi_rx"
+ ],
+ "LoopLimit" : 2000,
+ "ResultFile" : "E:/myWork/IP/releaseVerify/version/1.9.11/Gowin_DVI_RX_RefDesign/project/impl/temp/rtl_parser.result",
+ "Top" : "video_top",
+ "VerilogStd" : "sysv",
+ "VhdlStd" : "vhdl_93"
+}

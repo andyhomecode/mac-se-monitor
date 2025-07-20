@@ -37,6 +37,15 @@ First going to check the outputs on the HDMI line with the oscilloscope.  Make s
 
 Then plug into the FPGA.
 
+Got it working--video shows on the external monitor but it's all messed up.  Moving my hand over the wiring connecting the HDMI decoder module and the FPGA shows that it's just the signals are getting noisy because of the long, unshielded wires running near each other. 
+
+new plan.  Move all of it into the FPGA.  Gowin has HDMI RX IP that should work on this chip.
+
+https://www.gowinsemi.com/en/about/detail/latest_news/59/
+
+I'm stopping for today but will reboot this project to use the IP and do it all in one chip!
+the Dock has an HDMI connector on it too.
+
 
 ## Project Overview
 
