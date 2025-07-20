@@ -30,6 +30,13 @@ Either way, it's time for bed.
 
 Good news is the Mac Video ouput of the test pattern still works and it boots up on its own now that the HDMI RGB input isn't blocking the FASTRD_N.
 
+2025 07 20 ---  Resuming work.  Pulled out all the wires between the HDMI decoder and the
+FPGA. Going to start clean, just using control lines and the most-significant bit of each color.
+
+First going to check the outputs on the HDMI line with the oscilloscope.  Make sure they're what I'm expecting.
+
+Then plug into the FPGA.
+
 
 ## Project Overview
 

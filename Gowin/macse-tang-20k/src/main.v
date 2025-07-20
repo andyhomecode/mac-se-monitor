@@ -1,4 +1,4 @@
-// 2025 06 01 version
+// 2025 07 20 version
 
 module main(
 
@@ -10,35 +10,36 @@ module main(
     output reg video_out, // Changed to reg for procedural assignment
 
     // TTL RGB in
-    // 2025 06 01 remapped entirely 
-    input rgb_r0_E15, 
-    input rgb_r1_D14, 
+    // 2025 06 01 remapped entirely
+    // 2025 07 20 only loading most significant bits of RGb 
+    //input rgb_r0_E15, 
+    //input rgb_r1_D14, 
     //input rgb_r2_A15, // using for HSYNC because N9 is dedicated to SSPI
-    input rgb_r3_B14, 
-    input rgb_r4_A14,
+    //input rgb_r3_B14, 
+    input rgb_r_B14,
 
-
-    input rgb_g0_B13,
-    input rgb_g1_C12,
-    input rgb_g2_B12,
-    input rgb_g3_D10,
-    input rgb_g4_R7,
+    //input rgb_g0_B13,
+    //input rgb_g1_C12,
+    //input rgb_g2_B12,
+    //input rgb_g3_D10,
+    input rgb_g_A14,
     // I don't know why Green has 6 bits and the others just get 5, 
     // but I'm dropping it anyway
     // needed the extra pin because I had to move 
     // Pixel Clock off of R9 because it overlapped with SSPI loading
     // // input rgb_g5_D10, 
     
-    input rgb_b0_P7,
-    input rgb_b1_B11,
-    input rgb_b2_A11,
-    input rgb_b3_D11,
-    input rgb_b4_N6,
+    //input rgb_b0_P7,
+    //input rgb_b1_B11,
+    //input rgb_b2_A11,
+    //input rgb_b3_D11,
+    input rgb_b_b13,
 
     input rgb_odck, // PIXCLK
     input rgb_hsync, // Goes to A15
     input rgb_vsync,  // 
     input rgb_de,  // DISPEN on the Adafruit board schematic
+    input rgb_active, // Active Video signal, not used currently
 
     // TODO: Map Active to an input so I can know if there is HDMI or not
     // TODO: Show the Mac Icon if no HDMI video
@@ -53,10 +54,10 @@ module main(
 //    input E8,  // Switch for Number3
 
 
-    output reg LED5_L16, 
-    output reg LED4_L14, 
-    output reg LED3_N14,  
-    output reg LED2_N16,
+    // output reg LED5_L16, 
+    // output reg LED4_L14, 
+    output RBG_CLOCK_LED3_N14,  // for incoming HDMI pixel clock divider
+    output HDMI_ACTIVE_LED2_N16, // for incoming HDMI active
 
     // couple of outputs for the o'scope
     output J14,
@@ -187,27 +188,28 @@ module main(
     reg rgb_de_prev;
     reg mono_pixel; // Monochrome pixel output (1 bit)
 
-    // Color Conversion Wires (faster than registers in an ALWAYS)
-    wire [7:0] red, green, blue;
-    assign red[0]   = rgb_r0_E15; 
-    assign red[1]   = rgb_r1_D14; 
-    assign red[2]   = 1'b0; // 0 bit (unused, but don't remember why)
-    assign red[3]   = rgb_r3_B14; 
-    assign red[4]   = rgb_r4_A14; 
-    assign green[0] = rgb_g0_B13; 
-    assign green[1] = rgb_g1_C12; 
-    assign green[2] = rgb_g2_B12; 
-    assign green[3] = rgb_g3_D10; 
-    assign green[4] = rgb_g4_R7; 
-    // assign green[5] = rgb_g5_D10; // not loading this bit
-    assign blue[0]  = rgb_b0_P7; 
-    assign blue[1]  = rgb_b1_B11; 
-    assign blue[2]  = rgb_b2_A11; 
-    assign blue[3]  = rgb_b3_D11; 
-    assign blue[4]  = rgb_b4_N6; 
+    // changing from a bunch of lines of RGB to just the most significant bits
+    // // Color Conversion Wires (faster than registers in an ALWAYS)
+    // wire [7:0] red, green, blue;
+    // assign red[0]   = 1'b0;; 
+    // assign red[1]   = 1'b0;; 
+    // assign red[2]   = 1'b0; // 0 bit (unused, but don't remember why)
+    // assign red[3]   = 1'b0;; 
+    // assign red[4]   = rgb_r4_A14; 
+    // assign green[0] = rgb_g0_B13; 
+    // assign green[1] = rgb_g1_C12; 
+    // assign green[2] = rgb_g2_B12; 
+    // assign green[3] = rgb_g3_D10; 
+    // assign green[4] = rgb_g4_R7; 
+    // // assign green[5] = rgb_g5_D10; // not loading this bit
+    // assign blue[0]  = rgb_b0_P7; 
+    // assign blue[1]  = rgb_b1_B11; 
+    // assign blue[2]  = rgb_b2_A11; 
+    // assign blue[3]  = rgb_b3_D11; 
+    // assign blue[4]  = rgb_b4_N6; 
 
     // Sum the RGB wires
-    wire [8:0] rgb_sum = red + green + blue;
+    // wire [8:0] rgb_sum = red + green + blue;
 
     // Scaler Registers
     reg [8:0] scaled_write_x; // Scaled X coordinate (9 bits for H_SCALED)
@@ -264,8 +266,8 @@ module main(
 
         // --- Color Converter ---
         if (input_coord_valid) begin
-            // Compare the OR of all to a threshold
-            mono_pixel <= (rgb_sum > 8'd60) ? 1'b1 : 1'b0;
+            // Set mono_pixel high if any of R, G, or B are high
+            mono_pixel <= rgb_r_B14 | rgb_g_A14 | rgb_b_b13;
         end else begin
             mono_pixel <= 1'b0;
         end
@@ -311,10 +313,28 @@ module main(
     // debugging
     //assign P9 = input_y[3]; // Output for oscilloscope
 
-    
+    // ZO RELAXEN UND WATSCHEN DER BLINKENLICHTEN.
+
+    // ACHTUNG! DAS INKOMMEN HDMI-SIGNAL IST NUN GE-AKTIVEN!
+    assign HDMI_ACTIVE_LED2_N16 = ~rgb_active; // shine LED2 if HDMI is active
+
+
+    // DEUGGER STUFF TO SEE IF THE RGB INPUTS ARE WORKING
+    // --- rgb_odck activity indicator ---
+    reg [23:0] rgb_odck_counter = 0;
+    reg rgb_odck_blink = 0;
+    always @(posedge rgb_odck) begin
+        rgb_odck_counter <= rgb_odck_counter + 1;
+        if (rgb_odck_counter == 24'd0) // overflow, about once per ~16M clocks
+            rgb_odck_blink <= ~rgb_odck_blink;
+    end
+
+    assign RBG_CLOCK_LED3_N14 = rgb_odck_blink; // Blink LED3 on RGB clock activity
+
+
     // debugging
-    assign J16 = rgb_de; // Output for oscilloscope Line 1
-    assign J14 = mono_pixel; // Output for oscilloscope Line 2
+    assign J16 = rgb_odck_blink; // Blinks if rgb_odck is running
+    assign J14 = rgb_de;         // Output for oscilloscope Line 2
 
 
 endmodule
