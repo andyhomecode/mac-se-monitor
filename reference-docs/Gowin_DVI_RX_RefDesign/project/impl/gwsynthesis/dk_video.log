@@ -1,0 +1,12 @@
+GowinSynthesis start
+Running parser ...
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\reference-docs\Gowin_DVI_RX_RefDesign\project\src\dvi_rx\dvi_rx.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\reference-docs\Gowin_DVI_RX_RefDesign\project\src\dvi_tx\dvi_tx.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\reference-docs\Gowin_DVI_RX_RefDesign\project\src\edid_prom\edid_prom.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\reference-docs\Gowin_DVI_RX_RefDesign\project\src\video_top.v'
+Analyzing Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\macse-tang-20k\src\gowin_edid\edid_prom\edid_prom.v'
+ERROR (EX3794) : Duplicate module name '~i2c_slave.EDID_PROM_Top'("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\macse-tang-20k\src\gowin_edid\edid_prom\edid_prom.v":738)
+Previous definition of module '~i2c_slave.EDID_PROM_Top' is here("C:\Users\andy\Dropbox\Mac SE Monitor\reference-docs\Gowin_DVI_RX_RefDesign\project\src\edid_prom\edid_prom.v":744)
+ERROR (EX3928) : Module '~i2c_slave_wrapper.EDID_PROM_Top' is ignored due to previous errors("C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\macse-tang-20k\src\gowin_edid\edid_prom\edid_prom.v":738)
+Verilog file 'C:\Users\andy\Dropbox\Mac SE Monitor\Gowin\macse-tang-20k\src\gowin_edid\edid_prom\edid_prom.v' ignored due to errors
+GowinSynthesis finish
