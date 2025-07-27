@@ -2,11 +2,19 @@
  "Device" : "GW2A-18C",
  "Files" : [
   {
-   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/hdmi_rx.v",
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/dvi_rx/dvi_rx.v",
    "Type" : "verilog"
   },
   {
-   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/dvi_rx/dvi_rx.v",
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/edid_prom/edid_prom.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/gowin_osc/gowin_osc.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/hdmi_rx.v",
    "Type" : "verilog"
   }
  ],

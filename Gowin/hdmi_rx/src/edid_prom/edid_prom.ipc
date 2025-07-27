@@ -1,0 +1,13 @@
+[General]
+ipc_version=4
+file=edid_prom
+module=EDID_PROM_Top
+target_device=gw2a18c-011
+type=edid_prom
+version=1.0
+
+[Config]
+LANG=0
+Memory_Ini_File=../edid_640x480_mac_se.mi
+Memory_Type=ROM
+Synthesis_tool=GowinSynthesis

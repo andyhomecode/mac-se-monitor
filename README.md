@@ -1,5 +1,15 @@
 # Mac SE Modern Input Custom Video Card
 
+## update 2025 07 27
+
+Changing directions, ditching external HDMI decoder, doing it all in the FPGA.  
+
+Got VGA-level EDID working to Windows. Woooo!
+
+Next up, hook HDMI decoder to the o-scope outputs to test
+
+Then migrate the Mac Generator and output code over.
+
 ## update 2025 05 4 
 
 It works! HDMI image is shown on the mac monitor!

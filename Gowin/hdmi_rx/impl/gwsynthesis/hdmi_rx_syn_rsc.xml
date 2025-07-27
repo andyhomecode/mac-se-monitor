@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="hdmi_rx_top" Register="436" Alu="10" Lut="1029" Bsram="1" T_Register="436(436)" T_Alu="10(10)" T_Lut="1029(1029)" T_Bsram="1(1)">
+ <SubModule name="u_system_clock"/>
+</Module>
