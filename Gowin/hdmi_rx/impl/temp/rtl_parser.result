@@ -9,7 +9,7 @@
   "SubInsts" : [
    {
     "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/hdmi_rx.v",
-    "InstLine" : 99,
+    "InstLine" : 125,
     "InstName" : "edid_prom_inst",
     "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/edid_prom/edid_prom.v",
     "ModuleLine" : 9,
@@ -17,7 +17,7 @@
    },
    {
     "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/hdmi_rx.v",
-    "InstLine" : 110,
+    "InstLine" : 136,
     "InstName" : "dvi_rx_inst",
     "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/dvi_rx/dvi_rx.v",
     "ModuleLine" : 9,
@@ -25,7 +25,7 @@
    },
    {
     "InstFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/hdmi_rx.v",
-    "InstLine" : 36,
+    "InstLine" : 46,
     "InstName" : "u_system_clock",
     "ModuleFile" : "C:/Users/andy/Dropbox/Mac SE Monitor/Gowin/hdmi_rx/src/gowin_osc/gowin_osc.v",
     "ModuleLine" : 10,

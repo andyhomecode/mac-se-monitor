@@ -24,7 +24,17 @@ module hdmi_rx_top
     output            O_hpd,           // Hot plug detect - tells source we're present
     
     // Status LEDs
-    output     [3:0]  O_led           // Status indicator LEDs
+    output     [3:0]  O_led,          // Status indicator LEDs
+    
+    // Debug signals for oscilloscope
+    output            DEBUG_P11,       // I2C SCL debug
+    output            DEBUG_T11,       // I2C SDA debug (input only)
+    output            DEBUG_R11,       // EDID clock debug
+    output            DEBUG_T12,       // HPD debug
+    output            DEBUG_M15,       // EDID reset debug
+    output            DEBUG_M14,       // System clock divided
+    output            DEBUG_J14,       // Heartbeat debug
+    output            DEBUG_J16        // PLL lock status debug
 );
 
 //==================================================
@@ -76,10 +86,26 @@ assign heartbeat = (run_cnt < 32'd25_000_000) ? 1'b1 : 1'b0; // 50% duty cycle
 //==================================================
 // Hot Plug Detect Logic
 //==================================================
-// Always assert HPD high to indicate display is present and ready
-// In a real implementation, you might want to delay this until 
-// the EDID PROM is ready and PLL is locked
-assign O_hpd = I_rst_n; // HPD high when not in reset
+// Simple HPD logic - always high when system is ready (like it used to work)
+reg [15:0] hpd_delay_counter;
+reg hpd_ready;
+
+always @(posedge I_clk or negedge I_rst_n) 
+begin
+    if(!I_rst_n) begin
+        hpd_delay_counter <= 16'd0;
+        hpd_ready <= 1'b0;
+    end
+    else if(hpd_delay_counter < 16'd10000) begin // ~200us delay at 50MHz
+        hpd_delay_counter <= hpd_delay_counter + 1'b1;
+        hpd_ready <= 1'b0;
+    end
+    else begin
+        hpd_ready <= 1'b1;
+    end
+end
+
+assign O_hpd = hpd_ready; // Simple HPD - always high when ready
 
 //==================================================
 // Status LED assignments
@@ -125,6 +151,58 @@ DVI_RX_Top dvi_rx_inst
     .O_rgb_g         (O_rgb_g       ), // Green data [7:0]
     .O_rgb_b         (O_rgb_b       )  // Blue data [7:0]
 );
+
+//==================================================
+// Debug signal assignments for oscilloscope
+//==================================================
+// Clock divider for debug signals
+reg [15:0] debug_clk_div;
+always @(posedge I_clk or negedge I_rst_n) 
+begin
+    if(!I_rst_n)
+        debug_clk_div <= 16'd0;
+    else
+        debug_clk_div <= debug_clk_div + 1'b1;
+end
+
+// I2C activity detector
+reg i2c_scl_prev;
+reg i2c_activity;
+reg [15:0] i2c_activity_timer;
+
+always @(posedge I_clk or negedge I_rst_n) 
+begin
+    if(!I_rst_n) begin
+        i2c_scl_prev <= 1'b1;
+        i2c_activity <= 1'b0;
+        i2c_activity_timer <= 16'd0;
+    end
+    else begin
+        i2c_scl_prev <= I_scl;
+        
+        // Detect I2C activity (any edge on SCL only)
+        if(I_scl != i2c_scl_prev) begin
+            i2c_activity <= 1'b1;
+            i2c_activity_timer <= 16'd50000; // Hold for ~1ms at 50MHz
+        end
+        else if(i2c_activity_timer > 0) begin
+            i2c_activity_timer <= i2c_activity_timer - 1'b1;
+        end
+        else begin
+            i2c_activity <= 1'b0;
+        end
+    end
+end
+
+// Debug signal assignments
+assign DEBUG_P11 = I_scl;                    // Monitor I2C clock from source
+assign DEBUG_T11 = i2c_activity;             // I2C activity indicator
+assign DEBUG_R11 = I_clk;                    // System clock for timing reference  
+assign DEBUG_T12 = O_hpd;                    // HPD output (should be steady high)
+assign DEBUG_M15 = I_rst_n;                  // Reset status (active low)
+assign DEBUG_M14 = debug_clk_div[15];        // Divided system clock (~1.5kHz at 50MHz)
+assign DEBUG_J14 = heartbeat;                // Heartbeat indicator
+assign DEBUG_J16 = O_pll_lock;               // PLL lock status
 
 endmodule
 
