@@ -61,7 +61,14 @@ module main(
 
     // couple of outputs for the o'scope
     output J14,
-    output J16
+    output J16,
+    output M14,
+    output M15,
+    output T12,
+    output R11,
+    output T11,
+    output P11
+
 );
 
     // --- Clock Generation and Buffering for 15.xx MHz pixel clock ---
@@ -224,10 +231,14 @@ module main(
     reg bram_wea_reg; // Write Enable register for BRAM
 
     // Intermediate Wires
-    // Detect falling edges (assuming active-low syncs)
-    wire hsync_falling_edge = (rgb_hsync_prev == 1'b1 && rgb_hsync == 1'b0);
-    wire vsync_falling_edge = (rgb_vsync_prev == 1'b1 && rgb_vsync == 1'b0);
+    // Detect rising edges (end of active-LOW sync pulses = start of line/frame)
+    wire hsync_rising_edge = (rgb_hsync_prev == 1'b0 && rgb_hsync == 1'b1);
+    wire vsync_rising_edge = (rgb_vsync_prev == 1'b0 && rgb_vsync == 1'b1);
     wire de_rising_edge   = (rgb_de_prev == 1'b0 && rgb_de == 1'b1);
+
+    // Edge detection registers (capture edges for use in next cycle)
+    reg hsync_edge_detected;
+    reg vsync_edge_detected;
 
     // Combinatorial calculation for next BRAM address
     wire [17:0] next_bram_addr = (scaled_write_y * H_SCALED) + scaled_write_x;
@@ -240,6 +251,10 @@ module main(
         rgb_vsync_prev <= rgb_vsync;
         rgb_de_prev    <= rgb_de;
 
+        // --- Capture Edge Detection for Next Cycle ---
+        hsync_edge_detected <= hsync_rising_edge;
+        vsync_edge_detected <= vsync_rising_edge;
+
         // --- Simplified Input Coordinate Generator ---
         // Horizontal Counter (input_x)
         if (rgb_de) begin // Only count during active horizontal display
@@ -251,11 +266,11 @@ module main(
         end
 
         // Vertical Counter (input_y)
-        // Reset Y on VSync edge (detect during blanking)
-        if (vsync_falling_edge &&!rgb_de) begin // Check DE is low
+        // Reset Y on VSync rising edge (end of VSYNC pulse = start of new frame)
+        if (vsync_edge_detected) begin 
             input_y <= 0;
-        // Increment Y on HSync edge (detect during blanking)
-        end else if (hsync_falling_edge &&!rgb_de) begin // Check DE is low
+        // Increment Y on HSync rising edge (end of HSYNC pulse = start of new line)
+        end else if (hsync_edge_detected) begin 
             if (input_y < V_ACTIVE - 1) begin
                 input_y <= input_y + 1;
             end
@@ -332,9 +347,13 @@ module main(
     assign RBG_CLOCK_LED3_N14 = rgb_odck_blink; // Blink LED3 on RGB clock activity
 
 
-    // debugging
-    assign J16 = rgb_odck_blink; // Blinks if rgb_odck is running
-    assign J14 = rgb_de;         // Output for oscilloscope Line 2
-
-
+    // debugging - let's see the actual sync signal states
+    assign J16 = rgb_vsync;           // Current VSYNC state
+    assign J14 = rgb_hsync;           // Current HSYNC state  
+    assign M14 = rgb_vsync_prev;      // Previous VSYNC state
+    assign M15 = rgb_hsync_prev;      // Previous HSYNC state
+    assign T12 = vsync_rising_edge;   // VSYNC rising edge detection (immediate)
+    assign R11 = hsync_rising_edge;   // HSYNC rising edge detection (immediate)
+    assign T11 = vsync_edge_detected; // VSYNC edge detection (delayed, used by Y counter)
+    assign P11 = hsync_edge_detected; // HSYNC edge detection (delayed, used by Y counter)
 endmodule

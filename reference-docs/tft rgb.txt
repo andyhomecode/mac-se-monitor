@@ -1,0 +1,18 @@
+DO Output data enable – Used to indicate time of active video display versus non-active display
+or blank time. During blank, only HSYNC, VSYNC, and CTL[3:1] are transmitted. During
+DE 46 DO times of active display, or non-blank, only pixel data, QE[23:0], and QO[23:0] are transmitted.
+High: Active display time
+Low: Blank time
+
+HSYNC 48 DO Horizontal sync output
+
+ODCK 44 DO Output data clock – Pixel clock. All pixel outputs QE[23:0] and QO[23:0] (if in 2-pixel/clock mode), along with DE, HSYNC, VSYNC and CTL[3:1], are synchronized to this clock.
+
+QE[8:15] 20–27 DO the output data clock, ODCK.Even green-pixel output – Output for even and odd green pixels when in 1-pixel/clock mode.
+Output for even-only green pixel when in 2-pixel/clock mode. Output data is synchronized to
+QE[8:15] 20–27 DO the output data clock, ODCK.
+LSB: QE8/pin 20
+MSB: QE15/pin 27
+
+
+VSYNC 47 DO Vertical sync output
