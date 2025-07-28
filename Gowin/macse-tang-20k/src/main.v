@@ -104,7 +104,7 @@ module main(
     // --- BRAM for Frame Buffer ---
     wire [17:0] ada, adb; // Address inputs
     wire din, dout;       // Data inputs/outputs
-    wire clka, cea, reseta, clkb, ceb, resetb, oce; // Control signals
+    wire clka, cea, reseta, clkb, ceb, resetb, oce; // Control signals - removed wea
 
     Gowin_SDPB framebuffer(
         .dout(dout),
@@ -194,6 +194,14 @@ module main(
     reg rgb_vsync_prev;
     reg rgb_de_prev;
     reg mono_pixel; // Monochrome pixel output (1 bit)
+    
+    // NEW: Sync flag registers - only driven from pixel clock domain
+    reg newV; // VSYNC event flag - set by VSYNC detection, cleared after processing
+    reg newH; // HSYNC event flag - set by HSYNC detection, cleared after processing
+    
+    // Sync edge detection registers (for pixel clock domain)
+    reg rgb_vsync_sync1, rgb_vsync_sync2; // VSYNC synchronizer chain
+    reg rgb_hsync_sync1, rgb_hsync_sync2; // HSYNC synchronizer chain
 
     // changing from a bunch of lines of RGB to just the most significant bits
     // // Color Conversion Wires (faster than registers in an ALWAYS)
@@ -228,55 +236,64 @@ module main(
     reg [17:0] bram_addr_reg; // BRAM address register (18 bits for 512x342)
     reg bram_din_reg;
     reg bram_ena_reg; // Port Enable register for BRAM
-    reg bram_wea_reg; // Write Enable register for BRAM
+    //reg bram_wea_reg; // Write Enable register for BRAM
 
-    // Intermediate Wires
-    // Detect rising edges (end of active-LOW sync pulses = start of line/frame)
-    wire hsync_rising_edge = (rgb_hsync_prev == 1'b0 && rgb_hsync == 1'b1);
-    wire vsync_rising_edge = (rgb_vsync_prev == 1'b0 && rgb_vsync == 1'b1);
-    wire de_rising_edge   = (rgb_de_prev == 1'b0 && rgb_de == 1'b1);
-
-    // Edge detection registers (capture edges for use in next cycle)
-    reg hsync_edge_detected;
-    reg vsync_edge_detected;
+    // Intermediate Wires - SIMPLIFIED
+    // No edge detection needed - using direct clock edges
 
     // Combinatorial calculation for next BRAM address
     wire [17:0] next_bram_addr = (scaled_write_y * H_SCALED) + scaled_write_x;
 
     // --- Logic Implementation ---
 
+    // --- PIXEL CLOCK: Handle all logic in single clock domain with sync detection ---
     always @(posedge rgb_odck) begin
-        // --- Latch Previous States ---
+        // --- Synchronize sync signals to pixel clock domain ---
+        rgb_vsync_sync1 <= rgb_vsync;
+        rgb_vsync_sync2 <= rgb_vsync_sync1;
+        rgb_hsync_sync1 <= rgb_hsync;
+        rgb_hsync_sync2 <= rgb_hsync_sync1;
+        
+        // --- Detect rising edges of synchronized signals ---
+        if (rgb_vsync_sync1 && !rgb_vsync_sync2) begin
+            // VSYNC rising edge detected
+            newV <= 1'b1;
+        end
+        
+        if (rgb_hsync_sync1 && !rgb_hsync_sync2) begin
+            // HSYNC rising edge detected  
+            newH <= 1'b1;
+        end
+
+        // --- Latch Previous States for debugging ---
         rgb_hsync_prev <= rgb_hsync;
         rgb_vsync_prev <= rgb_vsync;
         rgb_de_prev    <= rgb_de;
 
-        // --- Capture Edge Detection for Next Cycle ---
-        hsync_edge_detected <= hsync_rising_edge;
-        vsync_edge_detected <= vsync_rising_edge;
-
-        // --- Simplified Input Coordinate Generator ---
-        // Horizontal Counter (input_x)
-        if (rgb_de) begin // Only count during active horizontal display
-            if (de_rising_edge) begin // Reset X at start of active line
-                input_x <= 0;
-            end else if (input_x < H_ACTIVE - 1) begin
-                input_x <= input_x + 1; // Increment X during active display
-            end
-        end
-
-        // Vertical Counter (input_y)
-        // Reset Y on VSync rising edge (end of VSYNC pulse = start of new frame)
-        if (vsync_edge_detected) begin 
+        // --- VSYNC flag: Reset frame ---
+        if (newV) begin
+            // VSYNC event detected - reset frame
             input_y <= 0;
-        // Increment Y on HSync rising edge (end of HSYNC pulse = start of new line)
-        end else if (hsync_edge_detected) begin 
+            input_x <= 0;
+            newV <= 1'b0;  // Clear the flag
+        end
+        // --- HSYNC flag: Reset line and increment Y ---
+        else if (newH) begin
+            // HSYNC event detected - reset X counter, increment Y
+            input_x <= 0;
             if (input_y < V_ACTIVE - 1) begin
                 input_y <= input_y + 1;
             end
+            newH <= 1'b0;  // Clear the flag
+        end
+        
+        // --- X Counter: Increment during active video (independent of sync flags) ---
+        if (rgb_de && input_x < H_ACTIVE - 1) begin
+            // During active video - increment X counter
+            input_x <= input_x + 1;
         end
 
-        // Coordinate Valid Signal - simply follows DE in this version
+        // Coordinate Valid Signal - simply follows DE
         input_coord_valid <= rgb_de;
 
         // --- Color Converter ---
@@ -288,12 +305,33 @@ module main(
         end
 
         // --- Scaler Logic ---
-        // (Consider pipelining multiply/divide if timing is an issue)
+        // T5 switch: 1 = scaled mode, 0 = crop mode (top-left corner)
         if (input_coord_valid) begin // Uses previous cycle's valid implicitly
-            scaled_write_x <= (input_x * H_SCALED) / H_ACTIVE;
-            scaled_write_y <= (input_y * V_SCALED) / V_ACTIVE;
-            scaled_mono_pixel <= mono_pixel;
-            scaled_write_enable <= 1'b1;
+            if (T5) begin
+                // SCALED MODE: Scale 800x480 to 512x342
+                scaled_write_x <= (input_x * H_SCALED) / H_ACTIVE;
+                // Alternative Y scaling to ensure full range coverage
+                if (input_y >= V_ACTIVE - 1) begin
+                    scaled_write_y <= V_SCALED - 1; // Ensure we hit the last line
+                end else begin
+                    scaled_write_y <= (input_y * V_SCALED) / V_ACTIVE;
+                end
+            end else begin
+                // CROP MODE: Direct 1:1 mapping (top-left 512x342 pixels)
+                if (input_x < H_SCALED && input_y < V_SCALED) begin
+                    scaled_write_x <= input_x[8:0]; // Take lower 9 bits 
+                    scaled_write_y <= input_y[8:0]; // Take lower 9 bits
+                end else begin
+                    // Outside crop area - don't write
+                    scaled_write_enable <= 1'b0;
+                end
+            end
+            
+            // Common logic for both modes
+            if (T5 || (input_x < H_SCALED && input_y < V_SCALED)) begin
+                scaled_mono_pixel <= mono_pixel;
+                scaled_write_enable <= 1'b1;
+            end
         end else begin
             scaled_write_enable <= 1'b0;
         end
@@ -304,23 +342,22 @@ module main(
             bram_addr_reg <= next_bram_addr;    // Register address
             bram_din_reg  <= scaled_mono_pixel; // Register data
             bram_ena_reg  <= 1'b1;             // Register Port Enable (asserted)
-            bram_wea_reg  <= 1'b1;             // Register Write Enable (asserted)
+            // bram_wea_reg  <= 1'b1;             // Register Write Enable (asserted)
         end else begin
             bram_ena_reg  <= 1'b0;             // Register Port Enable (deasserted)
-            bram_wea_reg  <= 1'b0;             // Register Write Enable (deasserted)
+            // bram_wea_reg  <= 1'b0;             // Register Write Enable (deasserted)
         end
     end
 
     // --- BRAM Interface Assignments ---
     // Assign BRAM inputs directly from the dedicated registers
-    // Ensure these port names match your BRAM primitive/inferred block
+    // For Gowin BRAM: cea controls both clock enable and write enable
 
     assign clka = rgb_odck; // BRAM clock
     assign ada = bram_addr_reg; // Use registered address (assuming Port A)
     assign din = bram_din_reg;   // Use registered data (assuming Port A)
-    assign cea = bram_ena_reg;    // Connect to Port A Enable (ENA)
-    //assign wea = bram_wea_reg;    // Connect to Port A Write Enable (WEA)
-                                // Adjust based on your BRAM's data width and primitive.
+    assign cea = bram_ena_reg;    // Clock Enable A also controls writes
+                                // No separate write enable - Gowin BRAM uses cea for both
         
     //////  END OF GEMINI 
 
@@ -347,13 +384,13 @@ module main(
     assign RBG_CLOCK_LED3_N14 = rgb_odck_blink; // Blink LED3 on RGB clock activity
 
 
-    // debugging - let's see the actual sync signal states
+    // debugging - simplified signals
     assign J16 = rgb_vsync;           // Current VSYNC state
     assign J14 = rgb_hsync;           // Current HSYNC state  
-    assign M14 = rgb_vsync_prev;      // Previous VSYNC state
-    assign M15 = rgb_hsync_prev;      // Previous HSYNC state
-    assign T12 = vsync_rising_edge;   // VSYNC rising edge detection (immediate)
-    assign R11 = hsync_rising_edge;   // HSYNC rising edge detection (immediate)
-    assign T11 = vsync_edge_detected; // VSYNC edge detection (delayed, used by Y counter)
-    assign P11 = hsync_edge_detected; // HSYNC edge detection (delayed, used by Y counter)
+    assign M14 = T5;                  // T5 switch state (1=scale, 0=crop) TODO: Isn't working.
+    assign M15 = scaled_write_y[8];   // MSB of scaled Y (should reach 341 in scale mode)  
+    assign T12 = rgb_de;              // Data Enable
+    assign R11 = input_x[0];          // LSB of X counter
+    assign T11 = input_y[0];          // LSB of Y counter
+    assign P11 = bram_ena_reg;        // BRAM Write Enable for debugging
 endmodule
