@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="video_top" Register="26" Lut="60" T_Register="596(26)" T_Alu="79(0)" T_Lut="1352(60)" T_Bsram="1(0)">
+ <SubModule name="EDID_PROM_Top_inst" Register="70" Lut="164" Bsram="1" T_Register="70(70)" T_Lut="164(164)" T_Bsram="1(1)"/>
+ <SubModule name="DVI_RX_Top_inst" Register="427" Alu="10" Lut="902" T_Register="427(427)" T_Alu="10(10)" T_Lut="902(902)"/>
+ <SubModule name="DVI_TX_Top_inst" Register="73" Alu="69" Lut="226" T_Register="73(73)" T_Alu="69(69)" T_Lut="226(226)"/>
+</Module>
