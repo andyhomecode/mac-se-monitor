@@ -1,8 +1,4 @@
-// HDMI to Mac SE monitor
-// Andy Maxwell
-// andy@maxwell.nyc
 // 2025 07 20 version
-// removing the external HDMI hardware and using the Gowin HDMI RX IP core
 
 module main(
 
@@ -13,28 +9,56 @@ module main(
     output mac_pixel_clk, // output for diagnostic
     output reg video_out, // Changed to reg for procedural assignment
 
-    // Universal reset (momentary push switch on T3 (Switch labeled 1))
-    input rst, // Connect to FPGA pin T3
-    // HDMI RX IP physical interface (to be connected to top-level or constraints)
-    // (I_rst_n is now internal, see below)
-    input I_tmds_clk_p, // HDMI_TXC_P (K14)
-    input I_tmds_clk_n, // HDMI_TXC_N (K15)
-    input [2:0] I_tmds_data_p, // [2]=G16, [1]=J15, [0]=H14
-    input [2:0] I_tmds_data_n, // [2]=H15, [1]=K16, [0]=H16
+    // TTL RGB in
+    // 2025 06 01 remapped entirely
+    // 2025 07 20 only loading most significant bits of RGb 
+    //input rgb_r0_E15, 
+    //input rgb_r1_D14, 
+    //input rgb_r2_A15, // using for HSYNC because N9 is dedicated to SSPI
+    //input rgb_r3_B14, 
+    input rgb_r_B14,
+
+    //input rgb_g0_B13,
+    //input rgb_g1_C12,
+    //input rgb_g2_B12,
+    //input rgb_g3_D10,
+    input rgb_g_A14,
+    // I don't know why Green has 6 bits and the others just get 5, 
+    // but I'm dropping it anyway
+    // needed the extra pin because I had to move 
+    // Pixel Clock off of R9 because it overlapped with SSPI loading
+    // // input rgb_g5_D10, 
+    
+    //input rgb_b0_P7,
+    //input rgb_b1_B11,
+    //input rgb_b2_A11,
+    //input rgb_b3_D11,
+    input rgb_b_b13,
+
+    input rgb_odck, // PIXCLK
+    input rgb_hsync, // Goes to A15
+    input rgb_vsync,  // 
+    input rgb_de,  // DISPEN on the Adafruit board schematic
+    input rgb_active, // Active Video signal, not used currently
+
+    // TODO: Map Active to an input so I can know if there is HDMI or not
+    // TODO: Show the Mac Icon if no HDMI video
+
+    // input rgb_bl, // Backlight control, not used
+    // input tp_* // for the Touch Screen, Mac SE doesn't have one.
 
 
     // --- Switches and LEDs for test settings, not used currently ---
-    input T5  // Switch for Number5
+    input T5,  // Switch for Number5
 //    input T4,  // Switch for Number4
 //    input E8,  // Switch for Number3
 
 
     // output reg LED5_L16, 
     // output reg LED4_L14, 
-    // output RBG_CLOCK_LED3_N14,  // for incoming HDMI pixel clock divider
-    // output HDMI_ACTIVE_LED2_N16 // for incoming HDMI active
+    output RBG_CLOCK_LED3_N14,  // for incoming HDMI pixel clock divider
+    output HDMI_ACTIVE_LED2_N16, // for incoming HDMI active
 
-/// <<<<<<< HEAD
     // couple of outputs for the o'scope
     output J14,
     output J16,
@@ -45,9 +69,6 @@ module main(
     output T11,
     output P11
 
-=======
-    // (oscope outputs removed to avoid pin conflicts)
->>>>>>> b6359de7b4f878b890109c2e4071990f61f462af
 );
 
     // --- Clock Generation and Buffering for 15.xx MHz pixel clock ---
@@ -89,10 +110,10 @@ module main(
         .dout(dout),
         .clka(clka),
         .cea(cea),
-        .reseta(rst),
+        .reseta(1'b0),
         .clkb(clkb),
         .ceb(ceb),
-        .resetb(rst), // use rst for both ports
+        .resetb(1'b0), // reset should always be low to enable it
         .oce(oce),
         .ada(ada),
         .din(din),
@@ -139,26 +160,32 @@ module main(
     end
 
     /////////////////////////////
-    // HDMI RX IP INTEGRATION  //
+    /////// HDMI DECODER SECTION //////////
     /////////////////////////////
+    ////  start of GEMINI
 
+        // --- Corrected Input Coordinate Generator ---
+    // Assumes standard video timing: DE high for active pixels,
+    // HSync/VSync pulses occur during blanking (DE low).
+    // Assumes HSync and VSync are active-low pulses (adjust if needed).
+    // --- Simplified Coordinate Generator + Registered BRAM Interface ---
 
-    // TODO: Hook up these to the pins in the Dock specs
-    // turn on HPD and DCC.  
-    // hook clock up to some sort of clock.
-    // resest to reset.
+    // Define active display dimensions
+    localparam H_ACTIVE = 800;
+    localparam V_ACTIVE = 480;
 
-    // 600x600 EDID to tell the computer to do that resolution
-	EDID_PROM_Top edid_prom(
-		.I_clk(I_clk), //input I_clk
-		.I_rst_n(I_rst_n), //input I_rst_n
-		.I_scl(I_scl), //input I_scl
-		.IO_sda(IO_sda) //inout IO_sda  
-	);
+    // Define scaled output dimensions
+    localparam H_SCALED = 512;
+    localparam V_SCALED = 342;
+    localparam BRAM_ADDR_WIDTH = $clog2(H_SCALED * V_SCALED); // 18 bits for 512x342
 
+    // --- Input Signal Declarations (Example) ---
+    // wire rgb_odck;
+    // wire rgb_de, rgb_hsync, rgb_vsync;
+    // wire rgb_r3_N7,...; // Example color bits
 
+    // --- Internal Registers and Wires ---
 
-<<<<<<< HEAD
     // Simplified Coordinate Generation Registers
     reg [9:0] input_x; // Input X coordinate (10 bits for H_ACTIVE)
     reg [8:0] input_y; // Input Y coordinate (9 bits for V_ACTIVE)
@@ -175,24 +202,36 @@ module main(
     // Sync edge detection registers (for pixel clock domain)
     reg rgb_vsync_sync1, rgb_vsync_sync2; // VSYNC synchronizer chain
     reg rgb_hsync_sync1, rgb_hsync_sync2; // HSYNC synchronizer chain
-=======
->>>>>>> b6359de7b4f878b890109c2e4071990f61f462af
 
+    // changing from a bunch of lines of RGB to just the most significant bits
+    // // Color Conversion Wires (faster than registers in an ALWAYS)
+    // wire [7:0] red, green, blue;
+    // assign red[0]   = 1'b0;; 
+    // assign red[1]   = 1'b0;; 
+    // assign red[2]   = 1'b0; // 0 bit (unused, but don't remember why)
+    // assign red[3]   = 1'b0;; 
+    // assign red[4]   = rgb_r4_A14; 
+    // assign green[0] = rgb_g0_B13; 
+    // assign green[1] = rgb_g1_C12; 
+    // assign green[2] = rgb_g2_B12; 
+    // assign green[3] = rgb_g3_D10; 
+    // assign green[4] = rgb_g4_R7; 
+    // // assign green[5] = rgb_g5_D10; // not loading this bit
+    // assign blue[0]  = rgb_b0_P7; 
+    // assign blue[1]  = rgb_b1_B11; 
+    // assign blue[2]  = rgb_b2_A11; 
+    // assign blue[3]  = rgb_b3_D11; 
+    // assign blue[4]  = rgb_b4_N6; 
 
+    // Sum the RGB wires
+    // wire [8:0] rgb_sum = red + green + blue;
 
-    // Internal wires for DVI_RX_Top outputs
-    wire O_pll_lock;
-    wire [3:0] O_pll_phase;
-    wire O_pll_phase_lock;
-    wire O_rgb_clk;
-    wire O_rgb_vs;
-    wire O_rgb_hs;
-    wire O_rgb_de;
-    wire [7:0] O_rgb_r;
-    wire [7:0] O_rgb_g;
-    wire [7:0] O_rgb_b;
+    // Scaler Registers
+    reg [8:0] scaled_write_x; // Scaled X coordinate (9 bits for H_SCALED)
+    reg [8:0] scaled_write_y; // Scaled Y coordinate (9 bits for V_SCALED)
+    reg scaled_mono_pixel;
+    reg scaled_write_enable;
 
-<<<<<<< HEAD
     // *** BRAM Interface Registers (KEEP THESE) ***
     reg [17:0] bram_addr_reg; // BRAM address register (18 bits for 512x342)
     reg bram_din_reg;
@@ -268,7 +307,7 @@ module main(
         // --- Scaler Logic ---
         // T5 switch: 1 = scaled mode, 0 = crop mode (top-left corner)
         if (input_coord_valid) begin // Uses previous cycle's valid implicitly
-            if (!T5) begin
+            if (T5) begin
                 // SCALED MODE: Scale 800x480 to 512x342
                 scaled_write_x <= (input_x * H_SCALED) / H_ACTIVE;
                 // Alternative Y scaling to ensure full range coverage
@@ -321,70 +360,13 @@ module main(
                                 // No separate write enable - Gowin BRAM uses cea for both
         
     //////  END OF GEMINI 
-=======
-    // Instantiate the HDMI RX IP (internal clock version)
-    DVI_RX_Top dvi_rx(
-        .I_rst_n(~rst), // active-low reset
-        .I_tmds_clk_p(I_tmds_clk_p),
-        .I_tmds_clk_n(I_tmds_clk_n),
-        .I_tmds_data_p(I_tmds_data_p),
-        .I_tmds_data_n(I_tmds_data_n),
-        .O_pll_lock(O_pll_lock),
-        .O_pll_phase(O_pll_phase),
-        .O_pll_phase_lock(O_pll_phase_lock),
-        .O_rgb_clk(O_rgb_clk),
-        .O_rgb_vs(O_rgb_vs),
-        .O_rgb_hs(O_rgb_hs),
-        .O_rgb_de(O_rgb_de),
-        .O_rgb_r(O_rgb_r),
-        .O_rgb_g(O_rgb_g),
-        .O_rgb_b(O_rgb_b)
-    );
 
-    // Simple coordinate generator for framebuffer write (HDMI domain)
-    reg [9:0] hdmi_x;
-    reg [8:0] hdmi_y;
-    reg O_rgb_de_prev;
-    reg O_rgb_vs_prev;
-    wire de_rising = (O_rgb_de_prev == 1'b0 && O_rgb_de == 1'b1);
-    wire de_falling = (O_rgb_de_prev == 1'b1 && O_rgb_de == 1'b0);
-    wire vs_falling = (O_rgb_vs_prev == 1'b1 && O_rgb_vs == 1'b0);
 
-    always @(posedge O_rgb_clk) begin
-        O_rgb_de_prev <= O_rgb_de;
-        O_rgb_vs_prev <= O_rgb_vs;
-        if (vs_falling) begin
-            hdmi_y <= 0;
-        end else if (de_falling) begin
-            hdmi_y <= hdmi_y + 1;
-        end
-        if (de_rising) begin
-            hdmi_x <= 0;
-        end else if (O_rgb_de) begin
-            hdmi_x <= hdmi_x + 1;
-        end
-    end
+    // debugging
+    //assign P9 = input_y[3]; // Output for oscilloscope
 
-    // Monochrome conversion (simple OR of MSBs)
-    wire mono_pixel = O_rgb_r[7] | O_rgb_g[7] | O_rgb_b[7];
+    // ZO RELAXEN UND WATSCHEN DER BLINKENLICHTEN.
 
-    // Framebuffer write enable logic
-    wire fb_write_en = O_rgb_de && (hdmi_x < 512) && (hdmi_y < 342);
-    wire [17:0] fb_addr = (hdmi_y * 512) + hdmi_x;
->>>>>>> b6359de7b4f878b890109c2e4071990f61f462af
-
-    assign clka = O_rgb_clk;
-    assign ada = fb_addr;
-    assign din = mono_pixel;
-    assign cea = fb_write_en;
-    assign wea = fb_write_en;
-
-    // HDMI activity LED (stub: always on if clock present)
-    //assign HDMI_ACTIVE_LED2_N16 = O_rgb_clk;
-
-    // (oscope assignments removed)
-
-<<<<<<< HEAD
     // ACHTUNG! DAS INKOMMEN HDMI-SIGNAL IST NUN GE-AKTIVEN!
     assign HDMI_ACTIVE_LED2_N16 = ~rgb_active; // shine LED2 if HDMI is active
 
@@ -405,16 +387,10 @@ module main(
     // debugging - simplified signals
     assign J16 = rgb_vsync;           // Current VSYNC state
     assign J14 = rgb_hsync;           // Current HSYNC state  
-    assign M14 = T5;                  // T5 switch state (1=scale, 0=crop) TODO: Isn't working.
+    assign M14 = T5;                  // T5 switch state (1=scale, 0=crop)
     assign M15 = scaled_write_y[8];   // MSB of scaled Y (should reach 341 in scale mode)  
     assign T12 = rgb_de;              // Data Enable
     assign R11 = input_x[0];          // LSB of X counter
     assign T11 = input_y[0];          // LSB of Y counter
     assign P11 = bram_ena_reg;        // BRAM Write Enable for debugging
-=======
-    // LED3 stub (no blink logic for now)
-    //assign RBG_CLOCK_LED3_N14 = 1'b1;
-
-
->>>>>>> b6359de7b4f878b890109c2e4071990f61f462af
 endmodule
