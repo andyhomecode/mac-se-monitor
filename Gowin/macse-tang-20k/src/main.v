@@ -188,7 +188,8 @@ module main(
 
     // Simplified Coordinate Generation Registers
     reg [9:0] input_x; // Input X coordinate (10 bits for H_ACTIVE)
-    reg [8:0] input_y; // Input Y coordinate (9 bits for V_ACTIVE)
+    // 2025 07 28 changed to 10 bits to avoid overflow errors
+    reg [9:0] input_y; // Input Y coordinate (10 bits for V_ACTIVE) 
     reg input_coord_valid;             // Valid signal for input coordinates
     reg rgb_hsync_prev;
     reg rgb_vsync_prev;
