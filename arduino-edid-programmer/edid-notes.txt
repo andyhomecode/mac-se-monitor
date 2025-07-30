@@ -1,0 +1,32 @@
+The external HDMI decoder has EEPROM for the EDID to send to the source computer.
+I'm going to make it either 640x480 60hz for standard VGA 
+ -- or --
+match the Mac SE dimensions (which is less compatable)
+
+Here's a link to some arduino code to download new data to the EEPROM:
+
+https://learn.adafruit.com/adafruit-tfp401-hdmi-slash-dvi-decoder-to-40-pin-ttl-display/editing-the-edid
+
+and here's some data from ChatGPT for 640x480:
+
+// 640x480 60hz, maybe bad checksum
+
+00 FF FF FF FF FF FF 00 61 01 00 00 00 00 00 00
+01 1D 01 03 80 11 0D 78 0A 00 00 00 00 00 00 00
+00 00 00 21 00 00 01 01 01 01 01 01 01 01 01 01
+01 01 01 01 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 FC 00 4D 61 63 20 53 45 0A 20
+20 20 20 20 20 00 00 00 FD 00 3C 4C 1E 08 00 0A
+20 20 20 20 20 20 00 00 00 FF 00 30 30 30 30 30
+30 30 30 30 30 0A 20 20 20 C4
+
+// might be good--chatGpt generated.
+00FFFFFFFFFFFF006101000000000000
+011D010380110D780A00000020000000
+00000000000000002100000101010101
+01010101010101010101010000000000
+00000000FC004D61632053450A202020
+FD003C4C1E08000A2020202020200000
+00FF003030303030303030300A202020
+20C470
+

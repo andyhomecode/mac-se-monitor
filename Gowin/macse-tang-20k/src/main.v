@@ -188,8 +188,7 @@ module main(
 
     // Simplified Coordinate Generation Registers
     reg [9:0] input_x; // Input X coordinate (10 bits for H_ACTIVE)
-    // 2025 07 28 changed to 10 bits to avoid overflow errors
-    reg [9:0] input_y; // Input Y coordinate (10 bits for V_ACTIVE) 
+    reg [9:0] input_y; // Input Y coordinate (10 bits for V_ACTIVE) // 2025 07 28 changed to 10 bits to avoid overflow errors 
     reg input_coord_valid;             // Valid signal for input coordinates
     reg rgb_hsync_prev;
     reg rgb_vsync_prev;
@@ -386,7 +385,8 @@ module main(
 
 
     // debugging - simplified signals
-    assign J16 = rgb_vsync;           // Current VSYNC state
+    assign J16 = T5; 
+    // assign J16 = rgb_vsync;           // Current VSYNC state
     assign J14 = rgb_hsync;           // Current HSYNC state  
     assign M14 = T5;                  // T5 switch state (1=scale, 0=crop)
     assign M15 = scaled_write_y[8];   // MSB of scaled Y (should reach 341 in scale mode)  
