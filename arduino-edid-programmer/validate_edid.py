@@ -2,12 +2,15 @@
 # See if the generated VGA one seems to be valid
 # run it against the GOWIN provided examples too
 # test driven development, baby
+import sys
+
 edid_hex = []
-with open('edid_640x480_mac_se.mi', 'r') as f:
-    for line in f:
-        line = line.strip()
-        if line and not line.startswith('#'):
-            edid_hex.append(int(line, 16))
+for line in sys.stdin:
+    line = line.strip()
+    if line and not line.startswith('#'):
+        tokens = line.strip().split()  # might be multiple tokens per line
+        for token in tokens:
+            edid_hex.append(int(token, 16))
 
 print('EDID Validation Report:')
 print(f'Total bytes: {len(edid_hex)}')
@@ -28,6 +31,34 @@ mfg_chars = [chr(((mfg >> 10) & 0x1F) + ord('A') - 1),
              chr(((mfg >> 5) & 0x1F) + ord('A') - 1), 
              chr((mfg & 0x1F) + ord('A') - 1)]
 print(f'Manufacturer ID: {mfg:04X} = {"".join(mfg_chars)}')
+
+print('\nMonitor Descriptors:')
+
+# EDID detailed descriptors start at byte 54, each 18 bytes
+for i in range(4):
+    desc = edid_base[54 + 18*i : 54 + 18*(i+1)]
+    if desc[0:3] == [0x00, 0x00, 0x00]:
+        tag = desc[3]
+        if tag == 0xFC:
+            # Monitor Name
+            name = ''.join(chr(c) for c in desc[5:18] if 32 <= c <= 126).strip()
+            print(f'  Monitor Name (0xFC): "{name}"')
+        elif tag == 0xFF:
+            # Serial Number
+            serial = ''.join(chr(c) for c in desc[5:18] if 32 <= c <= 126).strip()
+            print(f'  Serial Number (0xFF): "{serial}"')
+        elif tag == 0xFD:
+            # Range Limits
+            min_vrate = desc[5]
+            max_vrate = desc[6]
+            min_hrate = desc[7]
+            max_hrate = desc[8]
+            max_pixclk = desc[9] * 10  # in MHz
+            print(f'  Range Limits (0xFD): {min_vrate}-{max_vrate} Hz vertical, {min_hrate}-{max_hrate} kHz horizontal, up to {max_pixclk} MHz pixel clock')
+        else:
+            print(f'  Descriptor {i+1}: Unknown tag 0x{tag:02X}')
+    else:
+        print(f'  Descriptor {i+1}: Timing descriptor (not metadata)')
 
 # Check EDID version (bytes 18-19)
 print(f'EDID Version: {edid_base[18]}.{edid_base[19]}')
