@@ -179,12 +179,17 @@ module main(
     localparam V_SCALED = 342;
     localparam BRAM_ADDR_WIDTH = $clog2(H_SCALED * V_SCALED); // 18 bits for 512x342
 
+
     // --- Input Signal Declarations (Example) ---
     // wire rgb_odck;
     // wire rgb_de, rgb_hsync, rgb_vsync;
     // wire rgb_r3_N7,...; // Example color bits
 
     // --- Internal Registers and Wires ---
+    // Add these at the top of your module with other parameters
+    localparam V_BACK_PORCH = 31; // Adjust this value based on testing
+    reg [9:0] v_line_counter;     // Counts all lines including blanking
+    reg in_active_region;         // Flag for active display region
 
     // Simplified Coordinate Generation Registers
     reg [9:0] input_x; // Input X coordinate (10 bits for H_ACTIVE)
@@ -275,15 +280,26 @@ module main(
             // VSYNC event detected - reset frame
             input_y <= 0;
             input_x <= 0;
+            v_line_counter <= 0;
+            in_active_region <= 1'b0;
             newV <= 1'b0;  // Clear the flag
         end
-        // --- HSYNC flag: Reset line and increment Y ---
+        // --- HSYNC flag: Process line and increment counters ---
         else if (newH) begin
-            // HSYNC event detected - reset X counter, increment Y
+            // HSYNC event detected - reset X counter
             input_x <= 0;
-            if (input_y < V_ACTIVE - 1) begin
-                input_y <= input_y + 1;
+            
+            // Increment line counter regardless of active region
+            v_line_counter <= v_line_counter + 1;
+            
+            // Check if we're past the back porch
+            if (v_line_counter >= V_BACK_PORCH) begin
+                in_active_region <= 1'b1;
+                if (input_y < V_ACTIVE - 1) begin
+                    input_y <= input_y + 1;
+                end
             end
+            
             newH <= 1'b0;  // Clear the flag
         end
         
@@ -293,8 +309,8 @@ module main(
             input_x <= input_x + 1;
         end
 
-        // Coordinate Valid Signal - simply follows DE
-        input_coord_valid <= rgb_de;
+        // Coordinate Valid Signal - follows DE and active region flag
+        input_coord_valid <= rgb_de && in_active_region;
 
         // --- Color Converter ---
         if (input_coord_valid) begin

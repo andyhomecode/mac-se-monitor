@@ -30,3 +30,6 @@ FD003C4C1E08000A2020202020200000
 00FF003030303030303030300A202020
 20C470
 
+updated the python code to check EDIDs.
+
+Next up, try making some and uploading them to the board.
