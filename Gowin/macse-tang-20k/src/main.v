@@ -180,13 +180,8 @@ module main(
     localparam BRAM_ADDR_WIDTH = $clog2(H_SCALED * V_SCALED); // 18 bits for 512x342
 
 
-    // --- Input Signal Declarations (Example) ---
-    // wire rgb_odck;
-    // wire rgb_de, rgb_hsync, rgb_vsync;
-    // wire rgb_r3_N7,...; // Example color bits
-
     // --- Internal Registers and Wires ---
-    // Add these at the top of your module with other parameters
+
     localparam V_BACK_PORCH = 31; // Adjust this value based on testing
     reg [9:0] v_line_counter;     // Counts all lines including blanking
     reg in_active_region;         // Flag for active display region
@@ -207,29 +202,6 @@ module main(
     // Sync edge detection registers (for pixel clock domain)
     reg rgb_vsync_sync1, rgb_vsync_sync2; // VSYNC synchronizer chain
     reg rgb_hsync_sync1, rgb_hsync_sync2; // HSYNC synchronizer chain
-
-    // changing from a bunch of lines of RGB to just the most significant bits
-    // // Color Conversion Wires (faster than registers in an ALWAYS)
-    // wire [7:0] red, green, blue;
-    // assign red[0]   = 1'b0;; 
-    // assign red[1]   = 1'b0;; 
-    // assign red[2]   = 1'b0; // 0 bit (unused, but don't remember why)
-    // assign red[3]   = 1'b0;; 
-    // assign red[4]   = rgb_r4_A14; 
-    // assign green[0] = rgb_g0_B13; 
-    // assign green[1] = rgb_g1_C12; 
-    // assign green[2] = rgb_g2_B12; 
-    // assign green[3] = rgb_g3_D10; 
-    // assign green[4] = rgb_g4_R7; 
-    // // assign green[5] = rgb_g5_D10; // not loading this bit
-    // assign blue[0]  = rgb_b0_P7; 
-    // assign blue[1]  = rgb_b1_B11; 
-    // assign blue[2]  = rgb_b2_A11; 
-    // assign blue[3]  = rgb_b3_D11; 
-    // assign blue[4]  = rgb_b4_N6; 
-
-    // Sum the RGB wires
-    // wire [8:0] rgb_sum = red + green + blue;
 
     // Scaler Registers
     reg [8:0] scaled_write_x; // Scaled X coordinate (9 bits for H_SCALED)
@@ -292,9 +264,14 @@ module main(
             // Increment line counter regardless of active region
             v_line_counter <= v_line_counter + 1;
             
-            // Check if we're past the back porch
-            if (v_line_counter >= V_BACK_PORCH) begin
+            // Check if we're exactly at the back porch transition
+            if (v_line_counter == V_BACK_PORCH - 1) begin
+                // We're just reaching active region - set flag but don't increment y yet
                 in_active_region <= 1'b1;
+                // First active line is y=0, so don't increment
+            end 
+            else if (in_active_region) begin
+                // Already in active region, increment input_y for subsequent lines
                 if (input_y < V_ACTIVE - 1) begin
                     input_y <= input_y + 1;
                 end
@@ -375,12 +352,6 @@ module main(
     assign cea = bram_ena_reg;    // Clock Enable A also controls writes
                                 // No separate write enable - Gowin BRAM uses cea for both
         
-    //////  END OF GEMINI 
-
-
-    // debugging
-    //assign P9 = input_y[3]; // Output for oscilloscope
-
     // ZO RELAXEN UND WATSCHEN DER BLINKENLICHTEN.
 
     // ACHTUNG! DAS INKOMMEN HDMI-SIGNAL IST NUN GE-AKTIVEN!
