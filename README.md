@@ -63,14 +63,18 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ![Look at this happy Mac SE](2025-04-26-Mac-Logo-from-framebuffer-2.jpg)
 
+
 ## Features
 
-- Preservation of original Mac SE monitor, case, powersupply for maximum retro-nerd
-- Modern HDMI video input compatibility (800x600 60hz)
-- Nearest-neighbor scaling from 800x600 to 512x342 resolution
-- Monochrome conversion with simple RGB thresholding
-- Frame buffer for cross time-domain output synchronization
-- test pattern showing Susan Kare's smiling Mac icon!
+- Preservation of original Mac SE monitor, case, and power supply for maximum retro-nerd
+- Modern HDMI video input compatibility (800x600 @ 60Hz)
+- Nearest-neighbor scaling from 800x480 to 512x342 resolution, or crop mode (top-left 512x342)
+- Select between scaled and crop modes using DIP switch T5
+- Monochrome conversion: any active R, G, or B bit sets pixel ON
+- Frame buffer implemented in BRAM for cross time-domain output synchronization
+- Mac SE timing generator for authentic HSYNC, VSYNC, and pixel clock
+- Diagnostic outputs for oscilloscope and status LEDs
+- Test pattern showing Susan Kare's smiling Mac icon when no HDMI input
 
 ## Hardware Components
 
@@ -91,18 +95,32 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 - Original Resolution: 512 × 342 pixels
 - Monochrome display
 
+
 ### Key Modules
-1. **main.v**: this does all the heavy lifting.
-2. **Frame Buffer**: Stores scaled monochrome pixel data for synchronization with Mac SE timing.  DONE. It's 175104x1 to avoid having to do multiplication, but might need to change to match Mac's 512x342 to make writing easier.  GOWIN IP generated
-3. **Mac SE Timing Generator**: Generates horizontal and vertical sync signals, active display region, and pixel coordinates for the Mac SE monitor. DONE mac_se_timing_generator.v does all the heavy lifting.
-4. **Clock**: makes the right frequency for the Mac.  GOWIN IP generated
+1. **main.v**: Top-level module, coordinates all logic and signal flow.
+2. **Frame Buffer (Gowin_SDPB)**: BRAM stores monochrome pixel data, written from HDMI domain and read in Mac SE timing domain.
+3. **Mac SE Timing Generator (mac_se_timing_generator.v)**: Generates HSYNC, VSYNC, active region, and pixel coordinates for the Mac SE monitor.
+4. **Clock Generation (Gowin_OSC, Gowin_rPLL)**: Internal oscillator and PLL generate the 15.6672 MHz pixel clock for Mac SE timing.
+5. **Scaler/Crop Logic**: Scales 800x480 HDMI input to 512x342, or crops top-left region, selectable via DIP switch T5.
+6. **Monochrome Converter**: Converts incoming RGB to single-bit monochrome using logical OR of R, G, B inputs.
+7. **Diagnostic Outputs**: Multiple signals routed to LEDs and scope pins for debugging and status indication.
 
 ![Block Diagram](miro-Mac-FPGA.jpg)
 
 Diagram here:
 https://miro.com/app/board/uXjVI_tZUDw=/
 
-## I/O Wiring
+
+## I/O and Diagnostic Outputs
+
+- **mac_hsync, mac_vsync, mac_active, mac_pixel_clk**: Mac SE timing signals and diagnostics
+- **video_out**: Monochrome video output to Mac monitor
+- **rgb_r_B14, rgb_g_A14, rgb_b_b13**: Most significant bits of HDMI RGB input
+- **rgb_odck, rgb_hsync, rgb_vsync, rgb_de, rgb_active**: HDMI timing/control signals
+- **T5**: DIP switch to select scaled (ON) or crop (OFF) mode (to be wired extenrally)
+- **RBG_CLOCK_LED3_N14**: Blinks on HDMI pixel clock activity
+- **HDMI_ACTIVE_LED2_N16**: Indicates HDMI input active
+- **J14, J16, M14, M15, T12, R11, T11, P11**: Diagnostic outputs for oscilloscope and debugging
 
 ```plaintext
 - GPIO wiring
@@ -220,15 +238,16 @@ it took me a long, long time to figure this out.
 - 2025 05 03 IT IS ALIVE!!! Had to use Gemini Deep Research to figure out the proper timings for TTL RGB and was able to get scaled addresses to write into the buffer!!!  Now the problem is that the whole image is shifted 1/2 the screen to the right and wrapped around, has a top front porch that's pretty big and the bottom of the image is off the screen, and there's jitter in the bottom half of the image.  BUT IT IS ALIVE!!!
 - 2025 05 04 IT WORKS!!!  By adding a buffer between reading the incoming HDMI->TTL RGB stream and the framebuffer, it seems to have fixed some timing problems. DE HSYNC VSYNC and DATA were all exactly right on the incoming lines, now that I'm grabbing it all at once, it's writing the right data to the framebuffer.  No jitter. No shifting from a delay 
 
+further down
+
 ## TODO
 
-- TODO: Figure out why it's shifted down from the top. Reading lines too early?
-- TODO: Tone down the brightness cutoff so it's not totally washed out.
-further down
-- TODO: 3D print a holder board to mount the board inside the Mac
-- TODO: Wire up 5-v power to the HDMI board or 12v to the FPGA (probably FPGA) to the Mac power supply
-- TODO: put HDMI connector through back or front of Mac using extension.
-- TODO: add a ROM of the Mac logo (maybe with QR?) and show that when ACTIVE low (no HDMI)
+- Investigate vertical alignment: image may be shifted down from the top (possible timing issue)
+- Adjust brightness threshold for better grayscale/monochrome appearance
+- 3D print a holder board to mount the FPGA inside the Mac
+- Wire up 5V/12V power to HDMI board or FPGA from Mac power supply
+- Add HDMI connector extension for easier access
+- Add ROM for Mac logo (with QR?) and display when HDMI inactive
 
 
 ### Software/Tools

@@ -1,3 +1,6 @@
+2025 08 01 Not using. I can't figure out EDID.
+---
+
 The external HDMI decoder has EEPROM for the EDID to send to the source computer.
 I'm going to make it either 640x480 60hz for standard VGA 
  -- or --
