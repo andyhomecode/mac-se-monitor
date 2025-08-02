@@ -57,12 +57,10 @@ module main(
     input rgb_b_b13,
 
     // Switch for Scaling Mode (1=scale, 0=crop)
-    //  Number5 can't seem to get it working. using S4 or S5 pushbutton
-    // there is an off-by-one error on the Dock board for the silicon pushbuttons.
-    // Wiring diagram refers to buttons S1-S5, but board has S0-S4
-    // NOTE: Actually connected to C7, not T5.  Look at floorplan.
-    // Note 2: will move to a general purpose io pin for wiring to a switch
-    input T5,  
+    // connected to C7, silicon button S4
+    // (it's S4 on board silkscreen, but S5 in schematic, Obi-Wan)
+    // Note: will move to a general purpose io pin for wiring to a switch
+    input scale_crop,  
 
     output RBG_CLOCK_LED3_N14,  // for incoming HDMI pixel clock divider
     output HDMI_ACTIVE_LED2_N16, // for incoming HDMI active
@@ -337,9 +335,9 @@ module main(
         end
 
         // --- Scaler Logic ---
-        // T5 switch: 1 = scaled mode, 0 = crop mode (top-left corner)
+        // scale_crop switch: 1 = scaled mode, 0 = crop mode (top-left corner)
         if (input_coord_valid) begin // Uses previous cycle's valid implicitly
-            if (T5) begin
+            if (scale_crop) begin
                 // SCALED MODE: Scale 800x480 to 512x342
                 scaled_write_x <= (input_x * H_SCALED) / H_ACTIVE;
                 // Alternative Y scaling to ensure full range coverage
@@ -360,7 +358,7 @@ module main(
             end
             
             // Common logic for both modes
-            if (T5 || (input_x < H_SCALED && input_y < V_SCALED)) begin
+            if (scale_crop || (input_x < H_SCALED && input_y < V_SCALED)) begin
                 scaled_mono_pixel <= mono_pixel;
                 scaled_write_enable <= 1'b1;
             end
@@ -441,10 +439,10 @@ module main(
     // you debug with an *oscilloscope*
 
     // simplified signals
-    assign J16 = T5; 
+    assign J16 = scale_crop; 
     // assign J16 = rgb_vsync;           // Current VSYNC state
     assign J14 = rgb_hsync;           // Current HSYNC state  
-    assign M14 = T5;                  // T5 switch state (1=scale, 0=crop)
+    assign M14 = scale_crop;                  // scale_crop switch state (1=scale, 0=crop)
     assign M15 = scaled_write_y[8];   // MSB of scaled Y (should reach 341 in scale mode)  
     assign T12 = rgb_de;              // Data Enable
     assign R11 = input_x[0];          // LSB of X counter

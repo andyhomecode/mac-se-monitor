@@ -193,7 +193,7 @@ pin 30 (or Pin 11 upside down) is the problem.
 
 - 2025 06 01 
 
-![3D printed a baseplate to hold the boards](baseplate\mac-se-plate-with-holes.stl).
+[3D printed a baseplate to hold the boards (STL file)](baseplate\mac-se-plate-with-holes.stl)
 
 Added two FPC-40 breakout boards to resolve the
 FASTRD_N / HDMI Clock conflict.
