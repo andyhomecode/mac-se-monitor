@@ -2,15 +2,26 @@
 # See if the generated VGA one seems to be valid
 # run it against the GOWIN provided examples too
 # test driven development, baby
-import sys
 
-edid_hex = []
-for line in sys.stdin:
-    line = line.strip()
-    if line and not line.startswith('#'):
-        tokens = line.strip().split()  # might be multiple tokens per line
-        for token in tokens:
-            edid_hex.append(int(token, 16))
+import sys
+import os
+
+def read_edid_file(filename):
+    edid_hex = []
+    with open(filename, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#'):
+                tokens = line.strip().split()
+                for token in tokens:
+                    edid_hex.append(int(token, 16))
+    return edid_hex
+
+if len(sys.argv) < 2:
+    print(f"Usage: {os.path.basename(sys.argv[0])} <edid_data_file>")
+    sys.exit(1)
+
+edid_hex = read_edid_file(sys.argv[1])
 
 print('EDID Validation Report:')
 print(f'Total bytes: {len(edid_hex)}')
