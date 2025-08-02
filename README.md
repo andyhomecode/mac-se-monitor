@@ -6,6 +6,12 @@ This project aims to create a custom video card for classic Macintosh SE, allowi
 
 ![Look at this happy Mac SE](2025-04-26-Mac-Logo-from-framebuffer-2.jpg)
 
+<p align="center">
+  <a href="https://youtube.com/shorts/68_aQ-0gMAc" target="_blank">
+    <img src="https://img.youtube.com/vi/68_aQ-0gMAc/hqdefault.jpg" alt="Watch the demo video" width="480"/>
+  </a>
+</p>
+
 
 ## Features
 
