@@ -10,13 +10,13 @@ Andy's amazing Mac SE Monitor HDMI Video Card
             /               | |    ___________________   |
             ;                | |   :__________________/:  |
             |                | |   |                 '.|  |
+            |                | |   |    Mac SE        ||  |
+            |                | |   |     FPGA         ||  |
+            |                | |   |       HDMI       ||  |
+            |                | |   |   Video          ||  |
+            |                | |   |       Card       ||  |
             |                | |   |                  ||  |
-            |                | |   |                  ||  |
-            |                | |   |                  ||  |
-            |                | |   |                  ||  |
-            |                | |   |                  ||  |
-            |                | |   |                  ||  |
-            |                | |   |                  ||  |
+            |                | |   |   Andy Maxwell   ||  |
             |                | |   |______......-----"\|  |
             |                | |   |_______......-----"   |
             |                | |                          |
@@ -37,29 +37,32 @@ Andy's amazing Mac SE Monitor HDMI Video Card
 
 module main(
 
-
+    // OUTPUT to the Mac SE's analog board to drive the CRT
     output mac_hsync,
     output mac_vsync,
     output mac_active, // output for diagnostic
     output mac_pixel_clk, // output for diagnostic
     output reg video_out, // Changed to reg for procedural assignment
 
-    // TTL RGB in from the HDMI decoder
-    // 2025 07 20 only loading most significant bits of RGb 
-    input rgb_r_B14,
-    input rgb_g_A14,
-    input rgb_b_b13,
 
+    // INPUT from the HDMI decoder in RGB format
     input rgb_odck, // pixel clock
     input rgb_hsync, // Goes to A15
     input rgb_vsync,  // 
     input rgb_de,  // DISPEN on the Adafruit board schematic
     input rgb_active, // Active Video signal, not used currently
+    // only loading most significant bits of RGB
+    input rgb_r_B14,
+    input rgb_g_A14,
+    input rgb_b_b13,
 
-    // TODO: Show the Mac Icon if no HDMI video
-
-    // --- Switches and LEDs for test settings, not used currently ---
-    input T5,  // Switch for Number5 can't seem to get it working.
+    // Switch for Scaling Mode (1=scale, 0=crop)
+    //  Number5 can't seem to get it working. using S4 or S5 pushbutton
+    // there is an off-by-one error on the Dock board for the silicon pushbuttons.
+    // Wiring diagram refers to buttons S1-S5, but board has S0-S4
+    // NOTE: Actually connected to C7, not T5.  Look at floorplan.
+    // Note 2: will move to a general purpose io pin for wiring to a switch
+    input T5,  
 
     output RBG_CLOCK_LED3_N14,  // for incoming HDMI pixel clock divider
     output HDMI_ACTIVE_LED2_N16, // for incoming HDMI active
@@ -190,6 +193,15 @@ module main(
     always @(posedge fifteen_clk) begin
         video_out <= !(mac_active & dout); // Use AND condition for video_out
     end
+
+    //  __    __   _______  .___  ___.  __     .______        _______ .______   
+    // |  |  |  | |       \ |   \/   | |  |    |   _  \      /  _____||   _  \  
+    // |  |__|  | |  .--.  ||  \  /  | |  |    |  |_)  |    |  |  __  |  |_)  | 
+    // |   __   | |  |  |  ||  |\/|  | |  |    |      /     |  | |_ | |   _  <  
+    // |  |  |  | |  '--'  ||  |  |  | |  |    |  |\  \----.|  |__| | |  |_)  | 
+    // |__|  |__| |_______/ |__|  |__| |__|    | _| `._____| \______| |______/  
+                                                                            
+
 
     /////////////////////////////
     /////// HDMI DECODER SECTION //////////
@@ -378,36 +390,17 @@ module main(
     assign din = bram_din_reg;   // Use registered data (assuming Port A)
     assign cea = bram_ena_reg;    // Clock Enable A also controls writes
 
-        
+
+    //         :
+    //     '.  _  .'
+    //    -=  (~)  =-   
+    //     .'  #  '.
+    //    
     // ZO RELAXEN UND WATSCHEN DER BLINKENLICHTEN.
 
     // ACHTUNG! DAS INKOMMEN HDMI-SIGNAL IST NUN GE-AKTIVEN!
     assign HDMI_ACTIVE_LED2_N16 = ~rgb_active; // shine LED2 if HDMI is active
 
-
-    // Fight Bugs                      |     |
-    //                                 \\_V_//
-    //                                 \/=|=\/
-    //                                  [=v=]
-    //                                __\___/_____
-    //                               /..[  _____  ]
-    //                              /_  [ [  M /] ]
-    //                             /../.[ [ M /@] ]
-    //                            <-->[_[ [M /@/] ]
-    //                           /../ [.[ [ /@/ ] ]
-    //      _________________]\ /__/  [_[ [/@/ C] ]
-    //     <_________________>>0---]  [=\ \@/ C / /
-    //        ___      ___   ]/000o   /__\ \ C / /
-    //           \    /              /....\ \_/ /
-    //        ....\||/....           [___/=\___/
-    //       .    .  .    .          [...] [...]
-    //      .      ..      .         [___/ \___]
-    //      .    0 .. 0    .         <---> <--->
-    //   /\/\.    .  .    ./\/\      [..]   [..]
-    //  / / / .../|  |\... \ \ \    _[__]   [__]_
-    // / / /       \/       \ \ \  [____>   <____]
-
-    // DEUGGER STUFF TO SEE IF THE RGB INPUTS ARE WORKING
     // --- rgb_odck activity indicator ---
     reg [23:0] rgb_odck_counter = 0;
     reg rgb_odck_blink = 0;
@@ -420,7 +413,34 @@ module main(
     assign RBG_CLOCK_LED3_N14 = rgb_odck_blink; // Blink LED3 on RGB clock activity
 
 
-    // debugging - simplified signals
+    // Fight Bugs                      |     |
+    //                                 \\_V_//
+    //                                 \/=|=\/
+    //                                  [=v=]
+    //                                __\___/_____
+    //                               /..[  _____  ]
+    //                              /_  [ [  A /] ]
+    //                             /../.[ [ A /@] ]
+    //                            <-->[_[ [A /@/] ]
+    //                           /../ [.[ [ /@/ ] ]
+    //      _________________]\ /__/  [_[ [/@/ M] ]
+    //     <_________________>>0---]  [=\ \@/ M / /
+    //        ___      ___   ]/000o   /__\ \ M / /
+    //           \    /              /....\ \_/ /
+    //        ....\||/....           [___/=\___/
+    //       .    .  .    .          [...] [...]
+    //      .      ..      .         [___/ \___]
+    //      .    0 .. 0    .         <---> <--->
+    //   /\/\.    .  .    ./\/\      [..]   [..]
+    //  / / / .../|  |\... \ \ \    _[__]   [__]_
+    // / / /       \/       \ \ \  [____>   <____]
+
+    // Debugger? No.
+    // print('here!')???  Oh, no no no no... no.
+    // we're in hardware land now, no more print statements.
+    // you debug with an *oscilloscope*
+
+    // simplified signals
     assign J16 = T5; 
     // assign J16 = rgb_vsync;           // Current VSYNC state
     assign J14 = rgb_hsync;           // Current HSYNC state  
